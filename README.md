@@ -1,0 +1,1 @@
+# openimis-fr-invoice_payment_js
