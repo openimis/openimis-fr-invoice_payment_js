@@ -1,2 +1,30 @@
 {
+  "mainMenu": "Legal and Finance",
+  "menu": {
+    "invoices": "Invoices"
+  },
+  "emptyLabel": "",
+  "any": "Any",
+  "invoice": {
+    "type": "Type",
+    "recipients": "Recipients",
+    "code": "Code",
+    "dateInvoice": "Date Invoice",
+    "amountTotal": "Amount Total",
+    "status": {
+      "label": "Status",
+      "DRAFT": "Draft",
+      "VALIDATED": "Validated",
+      "PAYED": "Payed",
+      "CANCELLED": "Cancelled",
+      "DELETED": "Deleted",
+      "SUSPENDED": "Suspended"
+    }
+  },
+  "invoices": {
+    "pageTitle": "Invoices",
+    "searcher": {
+      "resultsTitle": "{invoicesTotalCount} Invoices Found"
+    }
+  }
 }

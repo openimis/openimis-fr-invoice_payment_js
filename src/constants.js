@@ -2,7 +2,7 @@ export const RIGHT_INVOICE_SEARCH = 155101;
 export const RIGHT_INVOICE_CREATE = 155102;
 export const RIGHT_INVOICE_UPDATE = 155103;
 export const RIGHT_INVOICE_DELETE = 155104;
-export const RIGHT_INVOICE_AMEND =  155109;
+export const RIGHT_INVOICE_AMEND = 155109;
 export const RIGHT_INVOICE_PAYMENT_SEARCH = 155201;
 export const RIGHT_INVOICE_PAYMENT_CREATE = 155202;
 export const RIGHT_INVOICE_PAYMENT_UPDATE = 155203;
@@ -32,3 +32,51 @@ export const RIGHT_BILL_EVENT_DELETE = 156304;
 export const RIGHT_BILL_EVENT_CREATE_MESSAGE = 156306;
 export const RIGHT_BILL_EVENT_DELETE_MY_MESSAGE = 156307;
 export const RIGHT_BILL_EVENT_DELETE_ALL_MESSAGE = 156308;
+export const DEFAULT_PAGE_SIZE = 10;
+export const ROWS_PER_PAGE_OPTIONS = [10, 20, 50, 100];
+export const EMPTY_STRING = "";
+export const DATE_TO_DATETIME_SUFFIX = "T00:00:00";
+export const GREATER_OR_EQUAL_LOOKUP = "Gte";
+export const LESS_OR_EQUAL_LOOKUP = "Lte";
+export const CONTAINS_LOOKUP = "Icontains";
+export const STARTS_WITH_LOOKUP = "Istartswith";
+export const STATUS_PREFIX_LENGTH = 2;
+export const STATUS = {
+  DRAFT: "0",
+  VALIDATED: "1",
+  PAYED: "2",
+  CANCELLED: "3",
+  DELETED: "4",
+  SUSPENDED: "5",
+};
+export const SUBJECT_TYPE_OPTIONS = [
+  {
+    value: "contract",
+    label: "Contract",
+  },
+  {
+    value: "family",
+    label: "Family",
+  },
+];
+export const THIRDPARTY_TYPE_OPTIONS = [
+  {
+    value: "insuree",
+    label: "Insuree",
+  },
+  {
+    value: "policyholder",
+    label: "Policy Holder",
+  },
+];
+export const INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_CONTRIBUTION_KEY = "invoice.SubjectAndThirdpartyPicker";
+export const INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_PROPS = {
+  TYPE: "type",
+  PICKER: "picker",
+  PICKER_PROJECTION: "pickerProjection",
+};
+export const DEFUALT_DEBOUNCE_TIME = 500;
+export const PICKER_NESTED_PROPERTY_REGEX = /^\w+{[\w\s]+}$/;
+export const PICKER_NESTED_PROPERTY_NAME_REGEX = /^\w+/;
+export const PICKER_NESTED_PROPERTY_PROJECTION_REGEX = /{[\w\s]+}$/;
+export const LEGAL_AND_FINANCE_MAIN_MENU_CONTRIBUTION_KEY = "invoice.MainMenu";
