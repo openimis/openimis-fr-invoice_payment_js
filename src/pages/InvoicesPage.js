@@ -11,18 +11,13 @@ const styles = (theme) => ({
   fab: theme.fab,
 });
 
-const InvoicesPage = (props) => {
-  const { intl, classes, rights } = props;
-
-  return (
-    rights.includes(RIGHT_INVOICE_SEARCH) && (
-      <div className={classes.page}>
-        <Helmet title={formatMessage(props.intl, "invoice", "invoices.pageTitle")} />
-        <InvoiceSearcher rights={rights} />
-      </div>
-    )
+const InvoicesPage = ({ intl, classes, rights }) =>
+  rights.includes(RIGHT_INVOICE_SEARCH) && (
+    <div className={classes.page}>
+      <Helmet title={formatMessage(intl, "invoice", "invoices.pageTitle")} />
+      <InvoiceSearcher rights={rights} />
+    </div>
   );
-};
 
 const mapStateToProps = (state) => ({
   rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],

@@ -6,7 +6,7 @@ import { withTheme, withStyles } from "@material-ui/core/styles";
 import { CONTAINS_LOOKUP, DEFUALT_DEBOUNCE_TIME } from "../constants";
 import InvoiceStatusPicker from "../pickers/InvoiceStatusPicker";
 import SubjectTypePicker from "../pickers/SubjectTypePicker";
-import ThirpartyTypePicker from "../pickers/ThirpartyTypePicker";
+import ThirdpartyTypePicker from "../pickers/ThirdpartyTypePicker";
 import _debounce from "lodash/debounce";
 
 const styles = (theme) => ({
@@ -57,7 +57,7 @@ const InvoiceFilter = ({ intl, classes, filters, onChangeFilters }) => {
     <Grid container className={classes.form}>
       <Grid item xs={2} className={classes.item}>
         <SubjectTypePicker
-          label="type"
+          label="invoice.subject"
           withNull
           nullLabel={formatMessage(intl, "invoice", "any")}
           value={filterValue("subjectType")}
@@ -65,8 +65,8 @@ const InvoiceFilter = ({ intl, classes, filters, onChangeFilters }) => {
         />
       </Grid>
       <Grid item xs={2} className={classes.item}>
-        <ThirpartyTypePicker
-          label="recipients"
+        <ThirdpartyTypePicker
+          label="invoice.thirdparty"
           withNull
           nullLabel={formatMessage(intl, "invoice", "any")}
           value={filterValue("thirdpartyType")}
@@ -76,7 +76,7 @@ const InvoiceFilter = ({ intl, classes, filters, onChangeFilters }) => {
       <Grid item xs={2} className={classes.item}>
         <TextInput
           module="invoice"
-          label="code"
+          label="invoice.code"
           value={filterValue("code")}
           onChange={onChangeStringFilter("code", CONTAINS_LOOKUP)}
         />
@@ -85,7 +85,7 @@ const InvoiceFilter = ({ intl, classes, filters, onChangeFilters }) => {
         <PublishedComponent
           pubRef="core.DatePicker"
           module="invoice"
-          label="dateInvoice"
+          label="invoice.dateInvoice"
           value={filterValue("dateInvoice")}
           onChange={(v) =>
             onChangeFilters([
@@ -100,7 +100,7 @@ const InvoiceFilter = ({ intl, classes, filters, onChangeFilters }) => {
       </Grid>
       <Grid item xs={2} className={classes.item}>
         <InvoiceStatusPicker
-          label="status.label"
+          label="invoice.status.label"
           withNull
           nullLabel={formatMessage(intl, "invoice", "any")}
           value={filterValue("status")}
@@ -118,7 +118,7 @@ const InvoiceFilter = ({ intl, classes, filters, onChangeFilters }) => {
       <Grid item xs={2} className={classes.item}>
         <NumberInput
           module="invoice"
-          label="amountTotal"
+          label="invoice.amountTotal"
           min={0}
           value={filterValue("amountTotal")}
           onChange={onChangeFilter("amountTotal")}
