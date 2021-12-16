@@ -10,7 +10,7 @@ It is dedicated to be deployed as a module of [openimis-fe_js](https://github.co
   **Invoices** (invoice.menu.invoices key), displayed if user has the right `155101`
 
 ## Other Contributions
-* `core.Router`: registering `invoices` routes in openIMIS client-side router
+* `core.Router`: registering `invoices`, `invoice` routes in openIMIS client-side router
 
 ## Available Contribution Points
 * `invoice.SubjectAndThirdpartyPicker` used to provide pickers for both Invoice Subject and Invoice Thirdparty; required structure:
@@ -24,12 +24,18 @@ It is dedicated to be deployed as a module of [openimis-fe_js](https://github.co
     ...
   ]
   ```
+* `invoice.TabPanel.label` ability to extend Invoice tab panel with a tab label
+* `invoice.TabPanel.panel` ability to extend Invoice tab panel with a panel displayed on click on an appropriate tab label
 
 ## Published Components
-* `invoice.InvoiceStatusPicker`, picker for Invoice Status
+* `invoice.InvoiceStatusPicker` picker for Invoice Status
 
 ## Dispatched Redux Actions
-* `INVOICE_INVOICES_{REQ|RESP|ERR}`, fetching Invoices (as triggered by the searcher)
+* `INVOICE_INVOICES_{REQ|RESP|ERR}` fetching Invoices (as triggered by the searcher)
+* `INVOICE_INVOICE_{REQ|RESP|ERR}` fetching Invoice
+* `INVOICE_INVOICE_LINE_ITEMS_{REQ|RESP|ERR}` fetching Invoice Line Items (as triggered by the searcher)
+* `INVOICE_MUTATION_{REQ|ERR}`, sending a mutation
+* `INVOICE_DELETE_INVOICE_RESP` receiving a result of delete Invoice mutation
 
 ## Other Modules Listened Redux Actions
 None
