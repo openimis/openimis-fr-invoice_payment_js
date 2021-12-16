@@ -51,5 +51,23 @@
     "searcher": {
       "resultsTitle": "{invoicesTotalCount} Invoices Found"
     }
+  },
+  "invoiceLineItems": {
+    "label": "Line Items",
+    "searcher": {
+      "resultsTitle": "{invoiceLineItemsTotalCount} Line Items Found"
+    }
+  },
+  "invoiceLineItem": {
+    "code": "Code",
+    "description": "Description",
+    "ledgerAccount": "Ledger Account",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "discount": "Discount",
+    "deduction": "Deduction",
+    "amountTotal": "Amount Total",
+    "amountNet": "Amount Net",
+    "amountNetTooltip": "Tax: {value}"
   }
 }

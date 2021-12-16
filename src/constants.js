@@ -80,3 +80,6 @@ export const PICKER_NESTED_PROPERTY_REGEX = /^\w+{[\w\s]+}$/;
 export const PICKER_NESTED_PROPERTY_NAME_REGEX = /^\w+/;
 export const PICKER_NESTED_PROPERTY_PROJECTION_REGEX = /{[\w\s]+}$/;
 export const LEGAL_AND_FINANCE_MAIN_MENU_CONTRIBUTION_KEY = "invoice.MainMenu";
+export const INVOICE_LINE_ITEMS_TAB_VALUE = "invoiceLineItemsTab";
+export const INVOICE_TABS_PANEL_CONTRIBUTION_KEY = "invoice.TabPanel.panel";
+export const INVOICE_TABS_LABEL_CONTRIBUTION_KEY = "invoice.TabPanel.label";

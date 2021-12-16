@@ -18,6 +18,7 @@ import { fetchInvoice, deleteInvoice } from "../actions";
 import InvoiceHeadPanel from "../components/InvoiceHeadPanel";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { getInvoiceStatus } from "../util/invoice-status";
+import InvoiceTabPanel from "../components/InvoiceTabPanel";
 
 const styles = (theme) => ({
   page: theme.page,
@@ -84,11 +85,12 @@ const InvoicePage = ({
     );
 
   const actions = [
-    !!invoice && getInvoiceStatus(invoice) !== STATUS.PAYED && {
-      doIt: openConfirmDialog,
-      icon: <DeleteIcon />,
-      tooltip: formatMessage(intl, "invoice", "delete.buttonTooltip"),
-    },
+    !!invoice &&
+      getInvoiceStatus(invoice) !== STATUS.PAYED && {
+        doIt: openConfirmDialog,
+        icon: <DeleteIcon />,
+        tooltip: formatMessage(intl, "invoice", "delete.buttonTooltip"),
+      },
   ];
 
   return (
@@ -103,6 +105,7 @@ const InvoicePage = ({
           back={back}
           onChange={onChange}
           HeadPanel={InvoiceHeadPanel}
+          Panels={[InvoiceTabPanel]}
           rights={rights}
           actions={actions}
         />
