@@ -59,6 +59,7 @@ const InvoiceLineItemsSearcher = ({
     ["description", true],
     ["ledgerAccount", true],
     ["quantity", true],
+    ["unitPrice", true],
     ["discount", true],
     ["deduction", true],
     ["amountTotal", true],
