@@ -5,6 +5,7 @@ import LegalAndFinanceMainMenu from "./menus/LegalAndFinanceMainMenu";
 import InvoicesPage from "./pages/InvoicesPage";
 import InvoiceStatusPicker from "./pickers/InvoiceStatusPicker";
 import InvoicePage from "./pages/InvoicePage";
+import { InvoiceLineItemsTabLabel, InvoiceLineItemsTabPanel } from "./components/InvoiceLineItemsTab";
 
 const ROUTE_INVOICES = "invoices";
 const ROUTE_INVOICE = "invoices/invoice";
@@ -15,12 +16,14 @@ const DEFAULT_CONFIG = {
   "core.MainMenu": [LegalAndFinanceMainMenu],
   "core.Router": [
     { path: ROUTE_INVOICES, component: InvoicesPage },
-    { path: ROUTE_INVOICE  + "/:invoice_uuid?", component: InvoicePage },
+    { path: ROUTE_INVOICE + "/:invoice_uuid?", component: InvoicePage },
   ],
   "refs": [
     { key: "invoice.route.invoice", ref: ROUTE_INVOICE },
     { key: "invoice.InvoiceStatusPicker", ref: InvoiceStatusPicker },
   ],
+  "invoice.TabPanel.label": [InvoiceLineItemsTabLabel],
+  "invoice.TabPanel.panel": [InvoiceLineItemsTabPanel],
 };
 
 export const InvoiceModule = (cfg) => {

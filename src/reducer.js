@@ -15,6 +15,7 @@ export const ACTION_TYPES = {
   SEARCH_INVOICES: "INVOICE_INVOICES",
   GET_INVOICE: "INVOICE_INVOICE",
   DELETE_INVOICE: "INVOICE_DELETE_INVOICE",
+  SEARCH_INVOICE_LINE_ITEMS: "INVOICE_INVOICE_LINE_ITEMS",
 };
 
 function reducer(
@@ -31,6 +32,12 @@ function reducer(
     errorInvoice: null,
     fetchedInvoice: false,
     invoice: null,
+    fetchingInvoiceLineItems: false,
+    errorInvoiceLineItems: null,
+    fetchedInvoiceLineItems: false,
+    invoiceLineItems: [],
+    invoiceLineItemsPageInfo: {},
+    invoiceLineItemsTotalCount: 0,
   },
   action,
 ) {
@@ -53,6 +60,16 @@ function reducer(
         invoice: null,
         errorInvoice: null,
       };
+    case REQUEST(ACTION_TYPES.SEARCH_INVOICE_LINE_ITEMS):
+      return {
+        ...state,
+        fetchingInvoiceLineItems: true,
+        fetchedInvoiceLineItems: false,
+        invoiceLineItems: [],
+        invoiceLineItemsPageInfo: {},
+        invoiceLineItemsTotalCount: 0,
+        errorInvoiceLineItems: null,
+      };
     case SUCCESS(ACTION_TYPES.SEARCH_INVOICES):
       return {
         ...state,
@@ -71,6 +88,19 @@ function reducer(
         invoice: parseData(action.payload.data.invoice)?.[0],
         errorInvoice: null,
       };
+    case SUCCESS(ACTION_TYPES.SEARCH_INVOICE_LINE_ITEMS):
+      return {
+        ...state,
+        fetchingInvoiceLineItems: false,
+        fetchedInvoiceLineItems: true,
+        invoiceLineItems: parseData(action.payload.data.invoiceLineItem)?.map((invoiceLineItem) => ({
+          ...invoiceLineItem,
+          id: decodeId(invoiceLineItem.id),
+        })),
+        invoiceLineItemsPageInfo: pageInfo(action.payload.data.invoiceLineItem),
+        invoiceLineItemsTotalCount: action.payload.data.invoiceLineItem?.totalCount,
+        errorInvoiceLineItems: formatGraphQLError(action.payload),
+      };
     case ERROR(ACTION_TYPES.SEARCH_INVOICES):
       return {
         ...state,
@@ -82,6 +112,12 @@ function reducer(
         ...state,
         fetchingInvoice: false,
         errorInvoice: formatServerError(action.payload),
+      };
+    case ERROR(ACTION_TYPES.SEARCH_INVOICE_LINE_ITEMS):
+      return {
+        ...state,
+        fetchingInvoiceLineItems: false,
+        errorInvoiceLineItems: formatServerError(action.payload),
       };
     case REQUEST(ACTION_TYPES.MUTATION):
       return dispatchMutationReq(state, action);

@@ -36,6 +36,20 @@ const INVOICE_FULL_PROJECTION = [
   "dateInvoice",
 ];
 
+const INVOICE_LINE_ITEM_FULL_PROJECTION = [
+  "code",
+  "id",
+  "description",
+  "ledgerAccount",
+  "quantity",
+  "unitPrice",
+  "discount",
+  "deduction",
+  "amountTotal",
+  "amountNet",
+  "taxAnalysis",
+];
+
 export function fetchInvoices(params) {
   const payload = formatPageQueryWithCount("invoice", params, INVOICE_FULL_PROJECTION);
   return graphql(payload, ACTION_TYPES.SEARCH_INVOICES);
@@ -59,4 +73,9 @@ export function deleteInvoice(invoice, clientMutationLabel, clientMutationDetail
           requestedDateTime
       }
   );
+}
+
+export function fetchInvoiceLineItems(params) {
+  const payload = formatPageQueryWithCount("invoiceLineItem", params, INVOICE_LINE_ITEM_FULL_PROJECTION);
+  return graphql(payload, ACTION_TYPES.SEARCH_INVOICE_LINE_ITEMS);
 }

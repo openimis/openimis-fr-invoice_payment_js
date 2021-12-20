@@ -179,7 +179,7 @@ const InvoiceSearcher = ({
 
   return (
     <Searcher
-      module="contact"
+      module="invoice"
       FilterPane={InvoiceFilter}
       fetch={fetch}
       items={invoices}
