@@ -13,8 +13,9 @@ import {
   TextInput,
   NumberInput,
   formatMessageWithValues,
+  formatMessage,
 } from "@openimis/fe-core";
-import { Fab, Grid, IconButton } from "@material-ui/core";
+import { Fab, Grid, IconButton, Tooltip } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { createInvoicePayment, updateInvoicePayment } from "../actions";
 import { connect } from "react-redux";
@@ -80,9 +81,11 @@ const InvoicePaymentDialog = ({
           <AddIcon />
         </Fab>
       ) : (
-        <IconButton onClick={handleOpen} disabled={disabled}>
-          <EditIcon />
-        </IconButton>
+        <Tooltip title={formatMessage(intl, "invoice", "editButtonTooltip")}>
+          <IconButton onClick={handleOpen} disabled={disabled}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
       )}
       <Dialog open={isOpen} onClose={handleClose}>
         <DialogTitle>
