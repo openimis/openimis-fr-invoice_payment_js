@@ -16,6 +16,10 @@ export const ACTION_TYPES = {
   GET_INVOICE: "INVOICE_INVOICE",
   DELETE_INVOICE: "INVOICE_DELETE_INVOICE",
   SEARCH_INVOICE_LINE_ITEMS: "INVOICE_INVOICE_LINE_ITEMS",
+  SEARCH_INVOICE_PAYMENTS: "INVOICE_INVOICE_PAYMENTS",
+  CREATE_INVOICE_PAYMENT: "INVOICE_CREATE_INVOICE_PAYMENT",
+  UPDATE_INVOICE_PAYMENT: "INVOICE_UPDATE_INVOICE_PAYMENT",
+  DELETE_INVOICE_PAYMENT: "INVOICE_DELETE_INVOICE_PAYMENT",
 };
 
 function reducer(
@@ -38,6 +42,12 @@ function reducer(
     invoiceLineItems: [],
     invoiceLineItemsPageInfo: {},
     invoiceLineItemsTotalCount: 0,
+    fetchingInvoicePayments: false,
+    errorInvoicePayments: null,
+    fetchedInvoicePayments: false,
+    invoicePayments: [],
+    invoicePaymentsPageInfo: {},
+    invoicePaymentsTotalCount: 0,
   },
   action,
 ) {
@@ -70,6 +80,16 @@ function reducer(
         invoiceLineItemsTotalCount: 0,
         errorInvoiceLineItems: null,
       };
+    case REQUEST(ACTION_TYPES.SEARCH_INVOICE_PAYMENTS):
+      return {
+        ...state,
+        fetchingInvoicePayments: true,
+        fetchedInvoicePayments: false,
+        invoicePayments: [],
+        invoicePaymentsPageInfo: {},
+        invoicePaymentsTotalCount: 0,
+        errorInvoicePayments: null,
+      };
     case SUCCESS(ACTION_TYPES.SEARCH_INVOICES):
       return {
         ...state,
@@ -101,6 +121,19 @@ function reducer(
         invoiceLineItemsTotalCount: action.payload.data.invoiceLineItem?.totalCount,
         errorInvoiceLineItems: formatGraphQLError(action.payload),
       };
+    case SUCCESS(ACTION_TYPES.SEARCH_INVOICE_PAYMENTS):
+      return {
+        ...state,
+        fetchingInvoicePayments: false,
+        fetchedInvoicePayments: true,
+        invoicePayments: parseData(action.payload.data.invoicePayment)?.map((invoicePayment) => ({
+          ...invoicePayment,
+          id: decodeId(invoicePayment.id),
+        })),
+        invoicePaymentsPageInfo: pageInfo(action.payload.data.invoicePayment),
+        invoicePaymentsTotalCount: action.payload.data.invoicePayment?.totalCount,
+        errorInvoicePayments: formatGraphQLError(action.payload),
+      };
     case ERROR(ACTION_TYPES.SEARCH_INVOICES):
       return {
         ...state,
@@ -119,12 +152,24 @@ function reducer(
         fetchingInvoiceLineItems: false,
         errorInvoiceLineItems: formatServerError(action.payload),
       };
+    case ERROR(ACTION_TYPES.SEARCH_INVOICE_PAYMENTS):
+      return {
+        ...state,
+        fetchingInvoicePayments: false,
+        errorInvoicePayments: formatServerError(action.payload),
+      };
     case REQUEST(ACTION_TYPES.MUTATION):
       return dispatchMutationReq(state, action);
     case ERROR(ACTION_TYPES.MUTATION):
       return dispatchMutationErr(state, action);
     case SUCCESS(ACTION_TYPES.DELETE_INVOICE):
       return dispatchMutationResp(state, "deleteInvoice", action);
+    case SUCCESS(ACTION_TYPES.CREATE_INVOICE_PAYMENT):
+      return dispatchMutationResp(state, "createInvoicePayment", action);
+    case SUCCESS(ACTION_TYPES.UPDATE_INVOICE_PAYMENT):
+      return dispatchMutationResp(state, "updateInvoicePayment", action);
+    case SUCCESS(ACTION_TYPES.DELETE_INVOICE_PAYMENT):
+      return dispatchMutationResp(state, "deleteInvoicePayment", action);
     default:
       return state;
   }

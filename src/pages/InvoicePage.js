@@ -17,8 +17,9 @@ import { RIGHT_INVOICE_UPDATE, STATUS } from "../constants";
 import { fetchInvoice, deleteInvoice } from "../actions";
 import InvoiceHeadPanel from "../components/InvoiceHeadPanel";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { getInvoiceStatus } from "../util/invoice-status";
+import { getInvoiceStatus } from "../util/status";
 import InvoiceTabPanel from "../components/InvoiceTabPanel";
+import { ACTION_TYPES } from "../reducer";
 
 const styles = (theme) => ({
   page: theme.page,
@@ -37,8 +38,10 @@ const InvoicePage = ({
   confirmed,
   submittingMutation,
   mutation,
+  journalize,
 }) => {
   const [editedInvoice, setEditedInvoice] = useState({});
+  const [confirmedAction, setConfirmedAction] = useState(() => null);
   const prevSubmittingMutationRef = useRef();
 
   useEffect(() => {
@@ -52,7 +55,7 @@ const InvoicePage = ({
   useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
       journalize(mutation);
-      back();
+      mutation?.actionType === ACTION_TYPES.DELETE_INVOICE && back();
     }
   }, [submittingMutation]);
 
@@ -68,28 +71,29 @@ const InvoicePage = ({
 
   const titleParams = (invoice) => ({ label: invoice?.code });
 
-  const confirmedAction = () =>
-    deleteInvoice(
-      invoice,
-      formatMessageWithValues(intl, "invoice", "delete.mutationLabel", {
-        code: invoice?.code,
-      }),
-    );
+  const deleteInvoiceCallback = () => deleteInvoice(
+    invoice,
+    formatMessageWithValues(intl, "invoice", "invoice.delete.mutationLabel", {
+      code: invoice?.code,
+    }),
+  );
 
-  const openConfirmDialog = () =>
+  const openDeleteInvoiceConfirmDialog = () => {
+    setConfirmedAction(() => deleteInvoiceCallback);
     coreConfirm(
-      formatMessageWithValues(intl, "invoice", "delete.confirm.title", {
+      formatMessageWithValues(intl, "invoice", "invoice.delete.confirm.title", {
         code: invoice?.code,
       }),
-      formatMessage(intl, "invoice", "delete.confirm.message"),
+      formatMessage(intl, "invoice", "invoice.delete.confirm.message"),
     );
+  };
 
   const actions = [
     !!invoice &&
       getInvoiceStatus(invoice) !== STATUS.PAYED && {
-        doIt: openConfirmDialog,
+        doIt: openDeleteInvoiceConfirmDialog,
         icon: <DeleteIcon />,
-        tooltip: formatMessage(intl, "invoice", "delete.buttonTooltip"),
+        tooltip: formatMessage(intl, "invoice", "deleteButtonTooltip"),
       },
   ];
 
@@ -108,6 +112,7 @@ const InvoicePage = ({
           Panels={[InvoiceTabPanel]}
           rights={rights}
           actions={actions}
+          setConfirmedAction={setConfirmedAction}
         />
       </div>
     )

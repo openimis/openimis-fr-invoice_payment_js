@@ -2,9 +2,9 @@ import React from "react";
 import { SelectInput } from "@openimis/fe-core";
 import { formatMessage } from "@openimis/fe-core";
 import { injectIntl } from "react-intl";
-import { STATUS } from "../constants";
+import { PAYMENT_STATUS } from "../constants";
 
-const InvoiceStatusPicker = ({
+const InvoicePaymentStatusPicker = ({
   intl,
   value,
   label,
@@ -15,9 +15,9 @@ const InvoiceStatusPicker = ({
   withLabel = true,
   required = false,
 }) => {
-  const options = Object.keys(STATUS).map((key) => ({
-    value: STATUS[key],
-    label: formatMessage(intl, "invoice", `invoice.status.${key}`),
+  const options = Object.keys(PAYMENT_STATUS).map((key) => ({
+    value: PAYMENT_STATUS[key],
+    label: formatMessage(intl, "invoice", `invoicePayment.status.${key}`),
   }));
 
   if (withNull) {
@@ -40,4 +40,4 @@ const InvoiceStatusPicker = ({
   );
 };
 
-export default injectIntl(InvoiceStatusPicker);
+export default injectIntl(InvoicePaymentStatusPicker);

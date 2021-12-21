@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { injectIntl } from "react-intl";
 import {
   withModulesManager,
@@ -28,7 +28,7 @@ import { getSubjectAndThirdpartyTypePicker } from "../util/subject-and-thirdpart
 import { IconButton, Tooltip } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { getInvoiceStatus } from "../util/invoice-status";
+import { getInvoiceStatus } from "../util/status";
 
 const InvoiceSearcher = ({
   intl,
@@ -53,11 +53,16 @@ const InvoiceSearcher = ({
   const [deletedInvoiceUuids, setDeletedInvoiceUuids] = useState([]);
   const prevSubmittingMutationRef = useRef();
 
-  useEffect(() => invoiceToDelete && openConfirmDialog(), [invoiceToDelete]);
+  useEffect(() => invoiceToDelete && openDeleteInvoiceConfirmDialog(), [invoiceToDelete]);
 
   useEffect(() => {
     if (invoiceToDelete && confirmed) {
-      confirmedAction();
+      deleteInvoice(
+        invoiceToDelete,
+        formatMessageWithValues(intl, "invoice", "invoice.delete.mutationLabel", {
+          code: invoiceToDelete.code,
+        }),
+      );
       setDeletedInvoiceUuids([...deletedInvoiceUuids, invoiceToDelete.id]);
     }
     invoiceToDelete && confirmed !== null && setInvoiceToDelete(null);
@@ -71,27 +76,13 @@ const InvoiceSearcher = ({
     prevSubmittingMutationRef.current = submittingMutation;
   });
 
-  const confirmedAction = useCallback(
-    () =>
-      deleteInvoice(
-        invoiceToDelete,
-        formatMessageWithValues(intl, "invoice", "delete.mutationLabel", {
-          code: invoiceToDelete.code,
-        }),
-      ),
-    [invoiceToDelete],
-  );
-
-  const openConfirmDialog = useCallback(
-    () =>
-      coreConfirm(
-        formatMessageWithValues(intl, "invoice", "delete.confirm.title", {
-          code: invoiceToDelete.code,
-        }),
-        formatMessage(intl, "invoice", "delete.confirm.message"),
-      ),
-    [invoiceToDelete],
-  );
+  const openDeleteInvoiceConfirmDialog = () =>
+    coreConfirm(
+      formatMessageWithValues(intl, "invoice", "invoice.delete.confirm.title", {
+        code: invoiceToDelete.code,
+      }),
+      formatMessage(intl, "invoice", "invoice.delete.confirm.message"),
+    );
 
   const fetch = (params) => fetchInvoices(params);
 
@@ -122,7 +113,7 @@ const InvoiceSearcher = ({
     ];
     if (rights.includes(RIGHT_INVOICE_UPDATE)) {
       formatters.push((invoice) => (
-        <Tooltip title={formatMessage(intl, "invoice", "edit.buttonTooltip")}>
+        <Tooltip title={formatMessage(intl, "invoice", "editButtonTooltip")}>
           <IconButton
             href={invoiceUpdatePageUrl(invoice)}
             onClick={(e) => e.stopPropagation() && onDoubleClick(invoice)}
@@ -135,7 +126,7 @@ const InvoiceSearcher = ({
     }
     if (rights.includes(RIGHT_INVOICE_DELETE)) {
       formatters.push((invoice) => (
-        <Tooltip title={formatMessage(intl, "invoice", "delete.buttonTooltip")}>
+        <Tooltip title={formatMessage(intl, "invoice", "deleteButtonTooltip")}>
           <IconButton
             onClick={() => onDelete(invoice)}
             disabled={getInvoiceStatus(invoice) === STATUS.PAYED || deletedInvoiceUuids.includes(invoice.id)}
@@ -187,7 +178,7 @@ const InvoiceSearcher = ({
       fetchingItems={fetchingInvoices}
       fetchedItems={fetchedInvoices}
       errorItems={errorInvoices}
-      tableTitle={formatMessageWithValues(intl, "invoice", "invoices.searcher.resultsTitle", {
+      tableTitle={formatMessageWithValues(intl, "invoice", "invoices.searcherResultsTitle", {
         invoicesTotalCount,
       })}
       headers={headers}
