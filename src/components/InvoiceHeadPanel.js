@@ -7,7 +7,7 @@ import SubjectTypePicker from "../pickers/SubjectTypePicker";
 import ThirdpartyTypePicker from "../pickers/ThirdpartyTypePicker";
 import { getSubjectAndThirdpartyTypePicker } from "../util/subject-and-thirdparty-picker";
 import InvoiceStatusPicker from "../pickers/InvoiceStatusPicker";
-import { getInvoiceStatus } from "../util/invoice-status";
+import { getInvoiceStatus } from "../util/status";
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,

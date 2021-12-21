@@ -1,6 +1,6 @@
 import React from "react";
 import { injectIntl } from "react-intl";
-import { withModulesManager, formatMessage, TextInput, NumberInput, PublishedComponent } from "@openimis/fe-core";
+import { formatMessage, TextInput, NumberInput, PublishedComponent } from "@openimis/fe-core";
 import { Grid } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { CONTAINS_LOOKUP, DEFUALT_DEBOUNCE_TIME } from "../constants";
@@ -104,15 +104,7 @@ const InvoiceFilter = ({ intl, classes, filters, onChangeFilters }) => {
           withNull
           nullLabel={formatMessage(intl, "invoice", "any")}
           value={filterValue("status")}
-          onChange={(value) =>
-            onChangeFilters([
-              {
-                id: "status",
-                value: value,
-                filter: `status: "${value}"`,
-              },
-            ])
-          }
+          onChange={onChangeStringFilter("status")}
         />
       </Grid>
       <Grid item xs={2} className={classes.item}>
@@ -128,4 +120,4 @@ const InvoiceFilter = ({ intl, classes, filters, onChangeFilters }) => {
   );
 };
 
-export default withModulesManager(injectIntl(withTheme(withStyles(styles)(InvoiceFilter))));
+export default injectIntl(withTheme(withStyles(styles)(InvoiceFilter)));

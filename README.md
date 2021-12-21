@@ -36,6 +36,9 @@ It is dedicated to be deployed as a module of [openimis-fe_js](https://github.co
 * `INVOICE_INVOICE_LINE_ITEMS_{REQ|RESP|ERR}` fetching Invoice Line Items (as triggered by the searcher)
 * `INVOICE_MUTATION_{REQ|ERR}`, sending a mutation
 * `INVOICE_DELETE_INVOICE_RESP` receiving a result of delete Invoice mutation
+* `INVOICE_CREATE_INVOICE_PAYMENT_RESP` receiving a result of create Invoice Payment mutation
+* `INVOICE_UPDATE_INVOICE_PAYMENT_RESP` receiving a result of update Invoice Payment mutation
+* `INVOICE_DELETE_INVOICE_PAYMENT_RESP` receiving a result of delete Invoice Payment mutation
 
 ## Other Modules Listened Redux Actions
 None

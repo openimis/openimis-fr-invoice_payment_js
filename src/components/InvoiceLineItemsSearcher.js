@@ -88,7 +88,7 @@ const InvoiceLineItemsSearcher = ({
         fetchingItems={fetchingInvoiceLineItems}
         fetchedItems={fetchedInvoiceLineItems}
         errorItems={errorInvoiceLineItems}
-        tableTitle={formatMessageWithValues(intl, "invoice", "invoiceLineItems.searcher.resultsTitle", {
+        tableTitle={formatMessageWithValues(intl, "invoice", "invoiceLineItems.searcherResultsTitle", {
           invoiceLineItemsTotalCount,
         })}
         headers={headers}
