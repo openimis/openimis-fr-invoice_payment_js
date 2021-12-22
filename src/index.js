@@ -7,6 +7,7 @@ import InvoiceStatusPicker from "./pickers/InvoiceStatusPicker";
 import InvoicePage from "./pages/InvoicePage";
 import { InvoiceLineItemsTabLabel, InvoiceLineItemsTabPanel } from "./components/InvoiceLineItemsTab";
 import { InvoicePaymentsTabLabel, InvoicePaymentsTabPanel } from "./components/InvoicePaymentsTab";
+import { InvoiceEventsTabLabel, InvoiceEventsTabPanel } from "./components/InvoiceEventsTab";
 
 const ROUTE_INVOICES = "invoices";
 const ROUTE_INVOICE = "invoices/invoice";
@@ -23,8 +24,8 @@ const DEFAULT_CONFIG = {
     { key: "invoice.route.invoice", ref: ROUTE_INVOICE },
     { key: "invoice.InvoiceStatusPicker", ref: InvoiceStatusPicker },
   ],
-  "invoice.TabPanel.label": [InvoiceLineItemsTabLabel, InvoicePaymentsTabLabel],
-  "invoice.TabPanel.panel": [InvoiceLineItemsTabPanel, InvoicePaymentsTabPanel],
+  "invoice.TabPanel.label": [InvoiceLineItemsTabLabel, InvoicePaymentsTabLabel, InvoiceEventsTabLabel],
+  "invoice.TabPanel.panel": [InvoiceLineItemsTabPanel, InvoicePaymentsTabPanel, InvoiceEventsTabPanel],
 };
 
 export const InvoiceModule = (cfg) => {

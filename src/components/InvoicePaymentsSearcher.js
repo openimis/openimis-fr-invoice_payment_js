@@ -4,7 +4,6 @@ import {
   formatMessage,
   formatMessageWithValues,
   Searcher,
-  withHistory,
   formatDateFromISO,
   withModulesManager,
   coreConfirm,
@@ -21,11 +20,10 @@ import {
 } from "../constants";
 import InvoicePaymentsFilter from "./InvoicePaymentsFilter";
 import InvoicePaymentStatusPicker from "../pickers/InvoicePaymentStatusPicker";
-import { getInvoicePaymentStatus } from "../util/status";
 import UpdateInvoicePaymentDialog from "../dialogs/InvoicePaymentDialog";
 import { IconButton, Tooltip } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { ACTION_TYPES } from "../reducer";
+import { ACTION_TYPE } from "../reducer";
 
 const InvoicePaymentsSearcher = ({
   intl,
@@ -64,7 +62,7 @@ const InvoicePaymentsSearcher = ({
     if (
       prevSubmittingMutationRef.current &&
       !submittingMutation &&
-      [ACTION_TYPES.CREATE_INVOICE_PAYMENT, ACTION_TYPES.UPDATE_INVOICE_PAYMENT].includes(mutation?.actionType)
+      [ACTION_TYPE.CREATE_INVOICE_PAYMENT, ACTION_TYPE.UPDATE_INVOICE_PAYMENT].includes(mutation?.actionType)
     ) {
       refetch();
     }
@@ -165,15 +163,16 @@ const InvoicePaymentsSearcher = ({
   };
 
   const sorts = () => [
-    ["code", true],
-    ["description", true],
-    ["ledgerAccount", true],
-    ["quantity", true],
-    ["unitPrice", true],
-    ["discount", true],
-    ["deduction", true],
-    ["amountTotal", true],
-    ["amountNet", true],
+    ["status", true],
+    ["codeExt", true],
+    ["label", true],
+    ["codeTp", true],
+    ["codeReceipt", true],
+    ["amountPayed", true],
+    ["fees", true],
+    ["amountReceived", true],
+    ["datePayment", true],
+    ["paymentOrigin", true],
   ];
 
   const defaultFilters = () => ({
@@ -209,7 +208,7 @@ const InvoicePaymentsSearcher = ({
         sorts={sorts}
         rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
         defaultPageSize={DEFAULT_PAGE_SIZE}
-        defaultOrderBy="id"
+        defaultOrderBy="codeExt"
         defaultFilters={defaultFilters()}
         rowDisabled={isRowDisabled}
         rowLocked={isRowDisabled}
@@ -222,10 +221,7 @@ const mapStateToProps = (state) => ({
   fetchingInvoicePayments: state.invoice.fetchingInvoicePayments,
   fetchedInvoicePayments: state.invoice.fetchedInvoicePayments,
   errorInvoicePayments: state.invoice.errorInvoicePayments,
-  invoicePayments: state.invoice.invoicePayments?.map((invoicePayment) => ({
-    ...invoicePayment,
-    status: getInvoicePaymentStatus(invoicePayment),
-  })),
+  invoicePayments: state.invoice.invoicePayments,
   invoicePaymentsPageInfo: state.invoice.invoicePaymentsPageInfo,
   invoicePaymentsTotalCount: state.invoice.invoicePaymentsTotalCount,
   submittingMutation: state.invoice.submittingMutation,
@@ -233,8 +229,8 @@ const mapStateToProps = (state) => ({
   confirmed: state.core.confirmed,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
     {
       fetchInvoicePayments,
       deleteInvoicePayment,
@@ -242,8 +238,5 @@ const mapDispatchToProps = (dispatch) => {
     },
     dispatch,
   );
-};
 
-export default withModulesManager(
-  withHistory(injectIntl(connect(mapStateToProps, mapDispatchToProps)(InvoicePaymentsSearcher))),
-);
+export default withModulesManager(injectIntl(connect(mapStateToProps, mapDispatchToProps)(InvoicePaymentsSearcher)));

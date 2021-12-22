@@ -107,5 +107,26 @@
       },
       "mutationLabel": "Delete Invoice Payment {invoicePaymentLabel} of {invoiceCode}"
     }
+  },
+  "invoiceEvents": {
+    "label": "Events",
+    "searcherResultsTitle":"{invoiceEventsTotalCount} Events Found"
+  },
+  "invoiceEvent": {
+    "eventType": {
+      "label": "Type",
+      "MESSAGE": "Message",
+      "STATUS": "Status",
+      "WARNING": "Warning",
+      "PAYMENT": "Payment",
+      "PAYMENT_ERROR": "Payment Error"
+    },
+    "message": "Message"
+  },
+  "invoiceEventMessage": {
+    "create": {
+      "label": "Create new Comment",
+      "mutationLabel": "Create Invoice Event Message for {invoiceCode}"
+    }
   }
 }

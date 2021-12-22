@@ -1,5 +1,5 @@
 import { graphql, formatPageQuery, formatPageQueryWithCount, formatMutation } from "@openimis/fe-core";
-import { ACTION_TYPES } from "./reducer";
+import { ACTION_TYPE } from "./reducer";
 import { ERROR, REQUEST, SUCCESS } from "./util/action-type";
 
 const INVOICE_FULL_PROJECTION = [
@@ -65,6 +65,8 @@ const INVOICE_PAYMENT_FULL_PROJECTION = [
   "paymentOrigin",
 ];
 
+const INVOICE_EVENT_FULL_PROJECTION = ["eventType", "message"];
+
 const formatInvoicePaymentGQL = (payment) =>
   `
     ${!!payment.id ? `id: "${payment.id}"` : ""}
@@ -81,36 +83,52 @@ const formatInvoicePaymentGQL = (payment) =>
     ${!!payment.paymentOrigin ? `paymentOrigin: "${payment.paymentOrigin}"` : ""}
   `;
 
+const formatInvoiceEventMessageGQL = (eventMessage) =>
+  `
+    ${!!eventMessage.invoiceId ? `invoiceId: "${eventMessage.invoiceId}"` : ""}
+    ${!!eventMessage.eventType ? `eventType: ${eventMessage.eventType}` : ""}
+    ${!!eventMessage.message ? `message: "${eventMessage.message}"` : ""}
+  `;
+
 export function fetchInvoices(params) {
   const payload = formatPageQueryWithCount("invoice", params, INVOICE_FULL_PROJECTION);
-  return graphql(payload, ACTION_TYPES.SEARCH_INVOICES);
+  return graphql(payload, ACTION_TYPE.SEARCH_INVOICES);
 }
 
 export function fetchInvoice(params) {
   const payload = formatPageQuery("invoice", params, INVOICE_FULL_PROJECTION);
-  return graphql(payload, ACTION_TYPES.GET_INVOICE);
+  return graphql(payload, ACTION_TYPE.GET_INVOICE);
 }
 
 export function fetchInvoiceLineItems(params) {
   const payload = formatPageQueryWithCount("invoiceLineItem", params, INVOICE_LINE_ITEM_FULL_PROJECTION);
-  return graphql(payload, ACTION_TYPES.SEARCH_INVOICE_LINE_ITEMS);
+  return graphql(payload, ACTION_TYPE.SEARCH_INVOICE_LINE_ITEMS);
 }
 
 export function fetchInvoicePayments(params) {
   const payload = formatPageQueryWithCount("invoicePayment", params, INVOICE_PAYMENT_FULL_PROJECTION);
-  return graphql(payload, ACTION_TYPES.SEARCH_INVOICE_PAYMENTS);
+  return graphql(payload, ACTION_TYPE.SEARCH_INVOICE_PAYMENTS);
+}
+
+export function fetchInvoiceEvents(params) {
+  const payload = formatPageQueryWithCount("invoiceEvent", params, INVOICE_EVENT_FULL_PROJECTION);
+  return graphql(payload, ACTION_TYPE.SEARCH_INVOICE_EVENTS);
 }
 
 export function deleteInvoice(invoice, clientMutationLabel) {
   const invoiceUuids = `uuids: ["${invoice?.id}"]`;
   const mutation = formatMutation("deleteInvoice", invoiceUuids, clientMutationLabel);
   const requestedDateTime = new Date();
-  return graphql(mutation.payload, [REQUEST(ACTION_TYPES.MUTATION), SUCCESS(ACTION_TYPES.DELETE_INVOICE), ERROR(ACTION_TYPES.MUTATION)], {
-    actionType: ACTION_TYPES.DELETE_INVOICE,
-    clientMutationId: mutation.clientMutationId,
-    clientMutationLabel,
-    requestedDateTime,
-  });
+  return graphql(
+    mutation.payload,
+    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.DELETE_INVOICE), ERROR(ACTION_TYPE.MUTATION)],
+    {
+      actionType: ACTION_TYPE.DELETE_INVOICE,
+      clientMutationId: mutation.clientMutationId,
+      clientMutationLabel,
+      requestedDateTime,
+    },
+  );
 }
 
 export function createInvoicePayment(invoicePayment, clientMutationLabel) {
@@ -118,9 +136,9 @@ export function createInvoicePayment(invoicePayment, clientMutationLabel) {
   const requestedDateTime = new Date();
   return graphql(
     mutation.payload,
-    [REQUEST(ACTION_TYPES.MUTATION), SUCCESS(ACTION_TYPES.CREATE_INVOICE_PAYMENT), ERROR(ACTION_TYPES.MUTATION)],
+    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.CREATE_INVOICE_PAYMENT), ERROR(ACTION_TYPE.MUTATION)],
     {
-      actionType: ACTION_TYPES.CREATE_INVOICE_PAYMENT,
+      actionType: ACTION_TYPE.CREATE_INVOICE_PAYMENT,
       clientMutationId: mutation.clientMutationId,
       clientMutationLabel,
       requestedDateTime,
@@ -133,9 +151,9 @@ export function updateInvoicePayment(invoicePayment, clientMutationLabel) {
   const requestedDateTime = new Date();
   return graphql(
     mutation.payload,
-    [REQUEST(ACTION_TYPES.MUTATION), SUCCESS(ACTION_TYPES.UPDATE_INVOICE_PAYMENT), ERROR(ACTION_TYPES.MUTATION)],
+    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.UPDATE_INVOICE_PAYMENT), ERROR(ACTION_TYPE.MUTATION)],
     {
-      actionType: ACTION_TYPES.UPDATE_INVOICE_PAYMENT,
+      actionType: ACTION_TYPE.UPDATE_INVOICE_PAYMENT,
       clientMutationId: mutation.clientMutationId,
       clientMutationLabel,
       requestedDateTime,
@@ -149,9 +167,28 @@ export function deleteInvoicePayment(invoicePayment, clientMutationLabel) {
   const requestedDateTime = new Date();
   return graphql(
     mutation.payload,
-    [REQUEST(ACTION_TYPES.MUTATION), SUCCESS(ACTION_TYPES.DELETE_INVOICE_PAYMENT), ERROR(ACTION_TYPES.MUTATION)],
+    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.DELETE_INVOICE_PAYMENT), ERROR(ACTION_TYPE.MUTATION)],
     {
-      actionType: ACTION_TYPES.DELETE_INVOICE_PAYMENT,
+      actionType: ACTION_TYPE.DELETE_INVOICE_PAYMENT,
+      clientMutationId: mutation.clientMutationId,
+      clientMutationLabel,
+      requestedDateTime,
+    },
+  );
+}
+
+export function createInvoiceEventMessage(invoiceEvent, clientMutationLabel) {
+  const mutation = formatMutation(
+    "createInvoiceEventMessage",
+    formatInvoiceEventMessageGQL(invoiceEvent),
+    clientMutationLabel,
+  );
+  const requestedDateTime = new Date();
+  return graphql(
+    mutation.payload,
+    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.CREATE_INVOICE_EVENT_MESSAGE), ERROR(ACTION_TYPE.MUTATION)],
+    {
+      actionType: ACTION_TYPE.CREATE_INVOICE_EVENT_MESSAGE,
       clientMutationId: mutation.clientMutationId,
       clientMutationLabel,
       requestedDateTime,

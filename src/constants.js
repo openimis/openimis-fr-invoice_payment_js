@@ -40,7 +40,7 @@ export const GREATER_OR_EQUAL_LOOKUP = "Gte";
 export const LESS_OR_EQUAL_LOOKUP = "Lte";
 export const CONTAINS_LOOKUP = "Icontains";
 export const STARTS_WITH_LOOKUP = "Istartswith";
-export const STATUS_PREFIX_LENGTH = 2;
+export const ENUM_PREFIX_LENGTH = 2;
 export const STATUS = {
   DRAFT: "0",
   VALIDATED: "1",
@@ -84,6 +84,7 @@ export const INVOICE_TABS_PANEL_CONTRIBUTION_KEY = "invoice.TabPanel.panel";
 export const INVOICE_TABS_LABEL_CONTRIBUTION_KEY = "invoice.TabPanel.label";
 export const INVOICE_LINE_ITEMS_TAB_VALUE = "invoiceLineItemsTab";
 export const INVOICE_PAYMENTS_TAB_VALUE = "invoicePaymentsTab";
+export const INVOICE_EVENTS_TAB_VALUE = "invoiceEventsTab";
 export const EMPTY_PAYMENT = {
   status: null,
   codeExt: null,
@@ -95,10 +96,21 @@ export const EMPTY_PAYMENT = {
   amountReceived: null,
   datePayment: null,
   paymentOrigin: null,
-}
+};
 export const PAYMENT_STATUS = {
   REJECTED: "0",
   ACCEPTED: "1",
   REFUNDED: "2",
   CANCELLED: "3",
+};
+export const EVENT_TYPE = {
+  MESSAGE: "0",
+  STATUS: "1",
+  WARNING: "2",
+  PAYMENT: "3",
+  PAYMENT_ERROR: "4",
+};
+export const EMPTY_EVENT_MESSAGE = {
+  eventType: EVENT_TYPE.MESSAGE,
+  message: "",
 };

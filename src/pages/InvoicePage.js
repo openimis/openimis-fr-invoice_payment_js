@@ -7,7 +7,6 @@ import {
   formatMessageWithValues,
   coreConfirm,
   journalize,
-  decodeId,
 } from "@openimis/fe-core";
 import { injectIntl } from "react-intl";
 import { bindActionCreators } from "redux";
@@ -17,13 +16,10 @@ import { RIGHT_INVOICE_UPDATE, STATUS } from "../constants";
 import { fetchInvoice, deleteInvoice } from "../actions";
 import InvoiceHeadPanel from "../components/InvoiceHeadPanel";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { getInvoiceStatus } from "../util/status";
+import { getEnumValue } from "../util/enum";
 import InvoiceTabPanel from "../components/InvoiceTabPanel";
-import { ACTION_TYPES } from "../reducer";
-
-const styles = (theme) => ({
-  page: theme.page,
-});
+import { ACTION_TYPE } from "../reducer";
+import { defaultPageStyles } from "../util/styles";
 
 const InvoicePage = ({
   intl,
@@ -55,7 +51,7 @@ const InvoicePage = ({
   useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
       journalize(mutation);
-      mutation?.actionType === ACTION_TYPES.DELETE_INVOICE && back();
+      mutation?.actionType === ACTION_TYPE.DELETE_INVOICE && back();
     }
   }, [submittingMutation]);
 
@@ -71,12 +67,13 @@ const InvoicePage = ({
 
   const titleParams = (invoice) => ({ label: invoice?.code });
 
-  const deleteInvoiceCallback = () => deleteInvoice(
-    invoice,
-    formatMessageWithValues(intl, "invoice", "invoice.delete.mutationLabel", {
-      code: invoice?.code,
-    }),
-  );
+  const deleteInvoiceCallback = () =>
+    deleteInvoice(
+      invoice,
+      formatMessageWithValues(intl, "invoice", "invoice.delete.mutationLabel", {
+        code: invoice?.code,
+      }),
+    );
 
   const openDeleteInvoiceConfirmDialog = () => {
     setConfirmedAction(() => deleteInvoiceCallback);
@@ -90,7 +87,7 @@ const InvoicePage = ({
 
   const actions = [
     !!invoice &&
-      getInvoiceStatus(invoice) !== STATUS.PAYED && {
+      getEnumValue(invoice?.status) !== STATUS.PAYED && {
         doIt: openDeleteInvoiceConfirmDialog,
         icon: <DeleteIcon />,
         tooltip: formatMessage(intl, "invoice", "deleteButtonTooltip"),
@@ -125,10 +122,7 @@ const mapStateToProps = (state, props) => ({
   confirmed: state.core.confirmed,
   fetchingInvoice: state.invoice.fetchingInvoice,
   fetchedInvoice: state.invoice.fetchedInvoice,
-  invoice: state.invoice.invoice && {
-    ...state.invoice.invoice,
-    id: decodeId(state.invoice.invoice.id),
-  },
+  invoice: state.invoice.invoice,
   errorInvoice: state.invoice.errorInvoice,
   policyHolders: state.policyHolder.policyHolders,
   confirmed: state.core.confirmed,
@@ -136,10 +130,9 @@ const mapStateToProps = (state, props) => ({
   mutation: state.invoice.mutation,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchInvoice, deleteInvoice, coreConfirm, journalize }, dispatch);
-};
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators({ fetchInvoice, deleteInvoice, coreConfirm, journalize }, dispatch);
 
 export default withHistory(
-  injectIntl(withTheme(withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(InvoicePage)))),
+  injectIntl(withTheme(withStyles(defaultPageStyles)(connect(mapStateToProps, mapDispatchToProps)(InvoicePage)))),
 );
