@@ -28,7 +28,6 @@ import { getSubjectAndThirdpartyTypePicker } from "../util/subject-and-thirdpart
 import { IconButton, Tooltip } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { getInvoiceStatus } from "../util/status";
 
 const InvoiceSearcher = ({
   intl,
@@ -109,7 +108,7 @@ const InvoiceSearcher = ({
       (invoice) =>
         !!invoice.dateInvoice ? formatDateFromISO(modulesManager, intl, invoice.dateInvoice) : EMPTY_STRING,
       (invoice) => invoice.amountTotal,
-      (invoice) => <InvoiceStatusPicker value={getInvoiceStatus(invoice)} readOnly />,
+      (invoice) => <InvoiceStatusPicker value={invoice?.status} readOnly />,
     ];
     if (rights.includes(RIGHT_INVOICE_UPDATE)) {
       formatters.push((invoice) => (
@@ -129,7 +128,7 @@ const InvoiceSearcher = ({
         <Tooltip title={formatMessage(intl, "invoice", "deleteButtonTooltip")}>
           <IconButton
             onClick={() => onDelete(invoice)}
-            disabled={getInvoiceStatus(invoice) === STATUS.PAYED || deletedInvoiceUuids.includes(invoice.id)}
+            disabled={invoice?.status === STATUS.PAYED || deletedInvoiceUuids.includes(invoice.id)}
           >
             <DeleteIcon />
           </IconButton>
@@ -208,8 +207,8 @@ const mapStateToProps = (state) => ({
   mutation: state.invoice.mutation,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
     {
       fetchInvoices,
       deleteInvoice,
@@ -218,7 +217,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     dispatch,
   );
-};
 
 export default withHistory(
   withModulesManager(injectIntl(connect(mapStateToProps, mapDispatchToProps)(InvoiceSearcher))),

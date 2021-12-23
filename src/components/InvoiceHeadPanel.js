@@ -7,15 +7,7 @@ import SubjectTypePicker from "../pickers/SubjectTypePicker";
 import ThirdpartyTypePicker from "../pickers/ThirdpartyTypePicker";
 import { getSubjectAndThirdpartyTypePicker } from "../util/subject-and-thirdparty-picker";
 import InvoiceStatusPicker from "../pickers/InvoiceStatusPicker";
-import { getInvoiceStatus } from "../util/status";
-
-const styles = (theme) => ({
-  tableTitle: theme.table.title,
-  item: theme.paper.item,
-  fullHeight: {
-    height: "100%",
-  },
-});
+import { defaultHeadPanelStyles } from "../util/styles";
 
 const InvoiceHeadPanel = ({ modulesManager, classes, invoice, mandatoryFieldsEmpty }) => {
   const taxAnalysisTotal = !!invoice?.taxAnalysis ? JSON.parse(invoice.taxAnalysis)?.["total"] : null;
@@ -127,7 +119,7 @@ const InvoiceHeadPanel = ({ modulesManager, classes, invoice, mandatoryFieldsEmp
           <NumberInput module="invoice" label="invoice.amountTotal" displayZero value={invoice?.amountTotal} readOnly />
         </Grid>
         <Grid item xs={3} className={classes.item}>
-          <InvoiceStatusPicker label="invoice.status.label" withNull value={getInvoiceStatus(invoice)} readOnly />
+          <InvoiceStatusPicker label="invoice.status.label" withNull value={invoice?.status} readOnly />
         </Grid>
         <Grid item xs={3} className={classes.item}>
           <TextInput module="invoice" label="invoice.currencyTpCode" value={invoice?.currencyTpCode} readOnly />
@@ -149,4 +141,4 @@ const InvoiceHeadPanel = ({ modulesManager, classes, invoice, mandatoryFieldsEmp
   );
 };
 
-export default withModulesManager(injectIntl(withTheme(withStyles(styles)(InvoiceHeadPanel))));
+export default withModulesManager(injectIntl(withTheme(withStyles(defaultHeadPanelStyles)(InvoiceHeadPanel))));

@@ -9,8 +9,9 @@ import {
   decodeId,
 } from "@openimis/fe-core";
 import { REQUEST, SUCCESS, ERROR } from "./util/action-type";
+import { getEnumValue } from "./util/enum";
 
-export const ACTION_TYPES = {
+export const ACTION_TYPE = {
   MUTATION: "INVOICE_MUTATION",
   SEARCH_INVOICES: "INVOICE_INVOICES",
   GET_INVOICE: "INVOICE_INVOICE",
@@ -20,6 +21,8 @@ export const ACTION_TYPES = {
   CREATE_INVOICE_PAYMENT: "INVOICE_CREATE_INVOICE_PAYMENT",
   UPDATE_INVOICE_PAYMENT: "INVOICE_UPDATE_INVOICE_PAYMENT",
   DELETE_INVOICE_PAYMENT: "INVOICE_DELETE_INVOICE_PAYMENT",
+  SEARCH_INVOICE_EVENTS: "INVOICE_INVOICE_EVENTS",
+  CREATE_INVOICE_EVENT_MESSAGE: "INVOICE_CREATE_INVOICE_EVENT_MESSAGE",
 };
 
 function reducer(
@@ -48,11 +51,17 @@ function reducer(
     invoicePayments: [],
     invoicePaymentsPageInfo: {},
     invoicePaymentsTotalCount: 0,
+    fetchingInvoiceEvents: false,
+    errorInvoiceEvents: null,
+    fetchedInvoiceEvents: false,
+    invoiceEvents: [],
+    invoiceEventsPageInfo: {},
+    invoiceEventsTotalCount: 0,
   },
   action,
 ) {
   switch (action.type) {
-    case REQUEST(ACTION_TYPES.SEARCH_INVOICES):
+    case REQUEST(ACTION_TYPE.SEARCH_INVOICES):
       return {
         ...state,
         fetchingInvoices: true,
@@ -62,7 +71,7 @@ function reducer(
         invoicesTotalCount: 0,
         errorInvoices: null,
       };
-    case REQUEST(ACTION_TYPES.GET_INVOICE):
+    case REQUEST(ACTION_TYPE.GET_INVOICE):
       return {
         ...state,
         fetchingInvoice: true,
@@ -70,7 +79,7 @@ function reducer(
         invoice: null,
         errorInvoice: null,
       };
-    case REQUEST(ACTION_TYPES.SEARCH_INVOICE_LINE_ITEMS):
+    case REQUEST(ACTION_TYPE.SEARCH_INVOICE_LINE_ITEMS):
       return {
         ...state,
         fetchingInvoiceLineItems: true,
@@ -80,7 +89,7 @@ function reducer(
         invoiceLineItemsTotalCount: 0,
         errorInvoiceLineItems: null,
       };
-    case REQUEST(ACTION_TYPES.SEARCH_INVOICE_PAYMENTS):
+    case REQUEST(ACTION_TYPE.SEARCH_INVOICE_PAYMENTS):
       return {
         ...state,
         fetchingInvoicePayments: true,
@@ -90,25 +99,43 @@ function reducer(
         invoicePaymentsTotalCount: 0,
         errorInvoicePayments: null,
       };
-    case SUCCESS(ACTION_TYPES.SEARCH_INVOICES):
+    case REQUEST(ACTION_TYPE.SEARCH_INVOICE_EVENTS):
+      return {
+        ...state,
+        fetchingInvoiceEvents: true,
+        fetchedInvoiceEvents: false,
+        invoiceEvents: [],
+        invoiceEventsPageInfo: {},
+        invoiceEventsTotalCount: 0,
+        errorInvoiceEvents: null,
+      };
+    case SUCCESS(ACTION_TYPE.SEARCH_INVOICES):
       return {
         ...state,
         fetchingInvoices: false,
         fetchedInvoices: true,
-        invoices: parseData(action.payload.data.invoice)?.map((invoice) => ({ ...invoice, id: decodeId(invoice.id) })),
+        invoices: parseData(action.payload.data.invoice)?.map((invoice) => ({
+          ...invoice,
+          id: decodeId(invoice.id),
+          status: getEnumValue(invoice?.status),
+        })),
         invoicesPageInfo: pageInfo(action.payload.data.invoice),
         invoicesTotalCount: !!action.payload.data.invoice ? action.payload.data.invoice.totalCount : null,
         errorInvoices: formatGraphQLError(action.payload),
       };
-    case SUCCESS(ACTION_TYPES.GET_INVOICE):
+    case SUCCESS(ACTION_TYPE.GET_INVOICE):
       return {
         ...state,
         fetchingInvoice: false,
         fetchedInvoice: true,
-        invoice: parseData(action.payload.data.invoice)?.[0],
+        invoice: parseData(action.payload.data.invoice).map((invoice) => ({
+          ...invoice,
+          id: decodeId(invoice.id),
+          status: getEnumValue(invoice?.status),
+        }))?.[0],
         errorInvoice: null,
       };
-    case SUCCESS(ACTION_TYPES.SEARCH_INVOICE_LINE_ITEMS):
+    case SUCCESS(ACTION_TYPE.SEARCH_INVOICE_LINE_ITEMS):
       return {
         ...state,
         fetchingInvoiceLineItems: false,
@@ -121,7 +148,7 @@ function reducer(
         invoiceLineItemsTotalCount: action.payload.data.invoiceLineItem?.totalCount,
         errorInvoiceLineItems: formatGraphQLError(action.payload),
       };
-    case SUCCESS(ACTION_TYPES.SEARCH_INVOICE_PAYMENTS):
+    case SUCCESS(ACTION_TYPE.SEARCH_INVOICE_PAYMENTS):
       return {
         ...state,
         fetchingInvoicePayments: false,
@@ -129,47 +156,69 @@ function reducer(
         invoicePayments: parseData(action.payload.data.invoicePayment)?.map((invoicePayment) => ({
           ...invoicePayment,
           id: decodeId(invoicePayment.id),
+          status: getEnumValue(invoicePayment?.status),
         })),
         invoicePaymentsPageInfo: pageInfo(action.payload.data.invoicePayment),
         invoicePaymentsTotalCount: action.payload.data.invoicePayment?.totalCount,
         errorInvoicePayments: formatGraphQLError(action.payload),
       };
-    case ERROR(ACTION_TYPES.SEARCH_INVOICES):
+    case SUCCESS(ACTION_TYPE.SEARCH_INVOICE_EVENTS):
+      return {
+        ...state,
+        fetchingInvoiceEvents: false,
+        fetchedInvoiceEvents: true,
+        invoiceEvents: parseData(action.payload.data.invoiceEvent)?.map((invoiceEvent) => ({
+          ...invoiceEvent,
+          eventType: getEnumValue(invoiceEvent?.eventType),
+        })),
+        invoiceEventsPageInfo: pageInfo(action.payload.data.invoiceEvent),
+        invoiceEventsTotalCount: action.payload.data.invoiceEvent?.totalCount,
+        errorInvoiceEvents: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.SEARCH_INVOICES):
       return {
         ...state,
         fetchingInvoices: false,
         errorInvoices: formatServerError(action.payload),
       };
-    case ERROR(ACTION_TYPES.GET_INVOICE):
+    case ERROR(ACTION_TYPE.GET_INVOICE):
       return {
         ...state,
         fetchingInvoice: false,
         errorInvoice: formatServerError(action.payload),
       };
-    case ERROR(ACTION_TYPES.SEARCH_INVOICE_LINE_ITEMS):
+    case ERROR(ACTION_TYPE.SEARCH_INVOICE_LINE_ITEMS):
       return {
         ...state,
         fetchingInvoiceLineItems: false,
         errorInvoiceLineItems: formatServerError(action.payload),
       };
-    case ERROR(ACTION_TYPES.SEARCH_INVOICE_PAYMENTS):
+    case ERROR(ACTION_TYPE.SEARCH_INVOICE_PAYMENTS):
       return {
         ...state,
         fetchingInvoicePayments: false,
         errorInvoicePayments: formatServerError(action.payload),
       };
-    case REQUEST(ACTION_TYPES.MUTATION):
+    case ERROR(ACTION_TYPE.SEARCH_INVOICE_EVENTS):
+      return {
+        ...state,
+        fetchingInvoiceEvents: false,
+        errorInvoiceEvents: formatServerError(action.payload),
+      };
+    case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);
-    case ERROR(ACTION_TYPES.MUTATION):
+    case ERROR(ACTION_TYPE.MUTATION):
       return dispatchMutationErr(state, action);
-    case SUCCESS(ACTION_TYPES.DELETE_INVOICE):
+    case SUCCESS(ACTION_TYPE.DELETE_INVOICE):
       return dispatchMutationResp(state, "deleteInvoice", action);
-    case SUCCESS(ACTION_TYPES.CREATE_INVOICE_PAYMENT):
+    case SUCCESS(ACTION_TYPE.CREATE_INVOICE_PAYMENT):
       return dispatchMutationResp(state, "createInvoicePayment", action);
-    case SUCCESS(ACTION_TYPES.UPDATE_INVOICE_PAYMENT):
+    case SUCCESS(ACTION_TYPE.UPDATE_INVOICE_PAYMENT):
       return dispatchMutationResp(state, "updateInvoicePayment", action);
-    case SUCCESS(ACTION_TYPES.DELETE_INVOICE_PAYMENT):
+    case SUCCESS(ACTION_TYPE.DELETE_INVOICE_PAYMENT):
       return dispatchMutationResp(state, "deleteInvoicePayment", action);
+    case SUCCESS(ACTION_TYPE.CREATE_INVOICE_EVENT_MESSAGE):
+      return dispatchMutationResp(state, "createInvoiceEventMessage", action);
     default:
       return state;
   }

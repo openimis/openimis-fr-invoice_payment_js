@@ -8,15 +8,7 @@ import InvoiceStatusPicker from "../pickers/InvoiceStatusPicker";
 import SubjectTypePicker from "../pickers/SubjectTypePicker";
 import ThirdpartyTypePicker from "../pickers/ThirdpartyTypePicker";
 import _debounce from "lodash/debounce";
-
-const styles = (theme) => ({
-  form: {
-    padding: 0,
-  },
-  item: {
-    padding: theme.spacing(1),
-  },
-});
+import { defaultFilterStyles } from "../util/styles";
 
 const InvoiceFilter = ({ intl, classes, filters, onChangeFilters }) => {
   const debouncedOnChangeFilters = _debounce(onChangeFilters, DEFUALT_DEBOUNCE_TIME);
@@ -120,4 +112,4 @@ const InvoiceFilter = ({ intl, classes, filters, onChangeFilters }) => {
   );
 };
 
-export default injectIntl(withTheme(withStyles(styles)(InvoiceFilter)));
+export default injectIntl(withTheme(withStyles(defaultFilterStyles)(InvoiceFilter)));

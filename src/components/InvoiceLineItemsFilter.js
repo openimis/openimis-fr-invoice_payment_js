@@ -4,15 +4,7 @@ import { Grid } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { CONTAINS_LOOKUP, DEFUALT_DEBOUNCE_TIME } from "../constants";
 import _debounce from "lodash/debounce";
-
-const styles = (theme) => ({
-  form: {
-    padding: 0,
-  },
-  item: {
-    padding: theme.spacing(1),
-  },
-});
+import { defaultFilterStyles } from "../util/styles";
 
 const InvoiceLineItemsFilter = ({ classes, filters, onChangeFilters }) => {
   const debouncedOnChangeFilters = _debounce(onChangeFilters, DEFUALT_DEBOUNCE_TIME);
@@ -133,4 +125,4 @@ const InvoiceLineItemsFilter = ({ classes, filters, onChangeFilters }) => {
   );
 };
 
-export default withTheme(withStyles(styles)(InvoiceLineItemsFilter));
+export default withTheme(withStyles(defaultFilterStyles)(InvoiceLineItemsFilter));

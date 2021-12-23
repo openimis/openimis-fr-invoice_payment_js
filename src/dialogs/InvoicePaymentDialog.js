@@ -22,10 +22,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { EMPTY_PAYMENT } from "../constants";
 import InvoicePaymentStatusPicker from "../pickers/InvoicePaymentStatusPicker";
-
-const styles = (theme) => ({
-  item: theme.paper.item,
-});
+import { defaultDialogStyles } from "../util/styles";
 
 const InvoicePaymentDialog = ({
   intl,
@@ -202,8 +199,8 @@ const InvoicePaymentDialog = ({
   );
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ createInvoicePayment, updateInvoicePayment }, dispatch);
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({ createInvoicePayment, updateInvoicePayment }, dispatch);
 
-export default injectIntl(withTheme(withStyles(styles)(connect(null, mapDispatchToProps)(InvoicePaymentDialog))));
+export default injectIntl(
+  withTheme(withStyles(defaultDialogStyles)(connect(null, mapDispatchToProps)(InvoicePaymentDialog))),
+);

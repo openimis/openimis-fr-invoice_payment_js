@@ -1,6 +1,6 @@
 import React from "react";
 import { injectIntl } from "react-intl";
-import { formatMessageWithValues, Searcher, withHistory } from "@openimis/fe-core";
+import { formatMessageWithValues, Searcher } from "@openimis/fe-core";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { fetchInvoiceLineItems } from "../actions";
@@ -112,13 +112,6 @@ const mapStateToProps = (state) => ({
   invoiceLineItemsTotalCount: state.invoice.invoiceLineItemsTotalCount,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(
-    {
-      fetchInvoiceLineItems,
-    },
-    dispatch,
-  );
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchInvoiceLineItems }, dispatch);
 
-export default withHistory(injectIntl(connect(mapStateToProps, mapDispatchToProps)(InvoiceLineItemsSearcher)));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(InvoiceLineItemsSearcher));

@@ -6,15 +6,7 @@ import { withTheme, withStyles } from "@material-ui/core/styles";
 import { CONTAINS_LOOKUP, DEFUALT_DEBOUNCE_TIME, STARTS_WITH_LOOKUP } from "../constants";
 import _debounce from "lodash/debounce";
 import InvoicePaymentStatusPicker from "../pickers/InvoicePaymentStatusPicker";
-
-const styles = (theme) => ({
-  form: {
-    padding: 0,
-  },
-  item: {
-    padding: theme.spacing(1),
-  },
-});
+import { defaultFilterStyles } from "../util/styles";
 
 const InvoicePaymentsFilter = ({ intl, classes, filters, onChangeFilters }) => {
   const debouncedOnChangeFilters = _debounce(onChangeFilters, DEFUALT_DEBOUNCE_TIME);
@@ -142,4 +134,4 @@ const InvoicePaymentsFilter = ({ intl, classes, filters, onChangeFilters }) => {
   );
 };
 
-export default injectIntl(withTheme(withStyles(styles)(InvoicePaymentsFilter)));
+export default injectIntl(withTheme(withStyles(defaultFilterStyles)(InvoicePaymentsFilter)));
