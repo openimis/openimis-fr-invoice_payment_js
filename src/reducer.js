@@ -23,6 +23,7 @@ export const ACTION_TYPE = {
   DELETE_INVOICE_PAYMENT: "INVOICE_DELETE_INVOICE_PAYMENT",
   SEARCH_INVOICE_EVENTS: "INVOICE_INVOICE_EVENTS",
   CREATE_INVOICE_EVENT_MESSAGE: "INVOICE_CREATE_INVOICE_EVENT_MESSAGE",
+  SEARCH_BILLS: "SEARCH_BILLS",
 };
 
 function reducer(
@@ -57,6 +58,17 @@ function reducer(
     invoiceEvents: [],
     invoiceEventsPageInfo: {},
     invoiceEventsTotalCount: 0,
+
+    fetchingBills: false,
+    errorBills: null,
+    fetchedBills: false,
+    bills: [],
+    billsPageInfo: {},
+    billsTotalCount: 0,
+    fetchingBill: false,
+    errorBill: null,
+    fetchedBill: false,
+    bill: null,
   },
   action,
 ) {
@@ -204,6 +216,36 @@ function reducer(
         ...state,
         fetchingInvoiceEvents: false,
         errorInvoiceEvents: formatServerError(action.payload),
+      };
+    case REQUEST(ACTION_TYPE.SEARCH_BILLS):
+      return {
+        ...state,
+        fetchingBills: true,
+        fetchedBills: false,
+        bills: [],
+        billsPageInfo: {},
+        billsTotalCount: 0,
+        errorBills: null,
+      };
+    case SUCCESS(ACTION_TYPE.SEARCH_BILLS):
+      return {
+        ...state,
+        fetchingBills: false,
+        fetchedBills: true,
+        bills: parseData(action.payload.data.bill)?.map((bill) => ({
+          ...bill,
+          id: decodeId(bill.id),
+          status: getEnumValue(bill?.status),
+        })),
+        billsPageInfo: pageInfo(action.payload.data.bill),
+        billsTotalCount: !!action.payload.data.bill ? action.payload.data.bill.totalCount : null,
+        errorBills: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.SEARCH_BILLS):
+      return {
+        ...state,
+        fetchingBills: false,
+        errorBills: formatServerError(action.payload),
       };
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);

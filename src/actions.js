@@ -65,6 +65,41 @@ const INVOICE_PAYMENT_FULL_PROJECTION = [
   "paymentOrigin",
 ];
 
+const BILL_FULL_PROJECTION = [
+  "id",
+  "isDeleted",
+  "jsonExt",
+  "dateCreated",
+  "dateUpdated",
+  "dateValidFrom",
+  "dateValidTo",
+  "replacementUuid",
+  "thirdpartyType",
+  "thirdpartyTypeName",
+  "thirdpartyId",
+  "thirdparty",
+  "codeTp",
+  "code",
+  "codeExt",
+  "dateDue",
+  "datePayed",
+  "amountDiscount",
+  "amountNet",
+  "amountTotal",
+  "taxAnalysis",
+  "status",
+  "currencyTpCode",
+  "currencyCode",
+  "note",
+  "terms",
+  "paymentReference",
+  "subjectType",
+  "subjectTypeName",
+  "subjectId",
+  "subject",
+  "dateBill",
+];
+
 const INVOICE_EVENT_FULL_PROJECTION = ["eventType", "message"];
 
 const formatInvoicePaymentGQL = (payment) =>
@@ -194,4 +229,10 @@ export function createInvoiceEventMessage(invoiceEvent, clientMutationLabel) {
       requestedDateTime,
     },
   );
+}
+
+//bill 
+export function fetchBills(params) {
+  const payload = formatPageQueryWithCount("bill", params, BILL_FULL_PROJECTION);
+  return graphql(payload, ACTION_TYPE.SEARCH_BILLS);
 }

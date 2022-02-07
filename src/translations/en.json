@@ -1,7 +1,8 @@
 {
   "mainMenu": "Legal and Finance",
   "menu": {
-    "invoices": "Invoices"
+    "invoices": "Invoices",
+    "bills": "Bills"
   },
   "emptyLabel": " ",
   "any": "Any",
@@ -128,5 +129,48 @@
       "label": "Create new Comment",
       "mutationLabel": "Create Invoice Event Message for {invoiceCode}"
     }
+  },
+  "bill": {
+    "pageTitle": "Bill {label}",
+    "headPanelTitle": "General Information",
+    "subject": "Subject",
+    "thirdparty": "Sender",
+    "code": "Code",
+    "codeTp": "Code Sender",
+    "codeExt": "Code External System",
+    "dateDue": "Date Due",
+    "dateBill": "Date Bill",
+    "dateValidFrom": "From",
+    "dateValidTo": "To",
+    "datePayed": "Date Payed",
+    "amountDiscount": "Discount",
+    "amountNet": "Net",
+    "taxAnalysis": "Tax",
+    "amountTotal": "Amount Total",
+    "status": {
+      "label": "Status",
+      "DRAFT": "Draft",
+      "VALIDATED": "Validated",
+      "PAYED": "Payed",
+      "CANCELLED": "Cancelled",
+      "DELETED": "Deleted",
+      "SUSPENDED": "Suspended"
+    },
+    "currencyTpCode": "Currency Thirdparty",
+    "currencyCode": "Currency",
+    "note": "Note",
+    "terms": "Terms",
+    "paymentReference": "Payment Reference",
+    "delete": {
+      "confirm": {
+        "title": "Delete {code}?",
+        "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
+      },
+      "mutationLabel": "Delete Invoice {code}"
+    }
+  },
+  "bills": {
+    "pageTitle": "Bills",
+    "searcherResultsTitle": "{billsTotalCount} Bills Found"
   }
 }
