@@ -236,3 +236,24 @@ export function fetchBills(params) {
   const payload = formatPageQueryWithCount("bill", params, BILL_FULL_PROJECTION);
   return graphql(payload, ACTION_TYPE.SEARCH_BILLS);
 }
+
+export function fetchBill(params) {
+  const payload = formatPageQuery("bill", params, BILL_FULL_PROJECTION);
+  return graphql(payload, ACTION_TYPE.GET_BILL);
+}
+
+export function deleteBill(bill, clientMutationLabel) {
+  const billUuids = `uuids: ["${bill?.id}"]`;
+  const mutation = formatMutation("deleteBill", billUuids, clientMutationLabel);
+  const requestedDateTime = new Date();
+  return graphql(
+    mutation.payload,
+    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.DELETE_BILL), ERROR(ACTION_TYPE.MUTATION)],
+    {
+      actionType: ACTION_TYPE.DELETE_BILL,
+      clientMutationId: mutation.clientMutationId,
+      clientMutationLabel,
+      requestedDateTime,
+    },
+  );
+}

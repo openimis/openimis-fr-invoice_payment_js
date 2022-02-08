@@ -1,34 +1,46 @@
-import React from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { injectIntl } from "react-intl";
 import {
   withModulesManager,
+  formatMessage,
   formatMessageWithValues,
   Searcher,
   formatDateFromISO,
   coreConfirm,
   journalize,
+  withHistory,
+  historyPush,
 } from "@openimis/fe-core";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { fetchBills } from "../actions";
+import { fetchBills, deleteBill } from "../actions";
 import {
   DEFAULT_PAGE_SIZE,
   ROWS_PER_PAGE_OPTIONS,
   EMPTY_STRING,
-  INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_CONTRIBUTION_KEY,
-  INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_PROPS,
-  PICKER_NESTED_PROPERTY_REGEX,
-  PICKER_NESTED_PROPERTY_NAME_REGEX,
-  PICKER_NESTED_PROPERTY_PROJECTION_REGEX,
+  RIGHT_BILL_UPDATE,
+  RIGHT_BILL_DELETE,
+  STATUS,
 } from "../constants";
 import BillFilter from "./BillFilter";
 import InvoiceStatusPicker from "../pickers/InvoiceStatusPicker";
-import _pick from "lodash/pick";
+import { getSubjectAndThirdpartyTypePicker } from "../util/subject-and-thirdparty-picker";
+import { IconButton, Tooltip } from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const BillSearcher = ({
   intl,
   modulesManager,
+  history,
+  rights,
+  coreConfirm,
+  confirmed,
+  journalize,
+  submittingMutation,
+  mutation,
   fetchBills,
+  deleteBill,
   fetchingBills,
   fetchedBills,
   errorBills,
@@ -36,67 +48,133 @@ const BillSearcher = ({
   billsPageInfo,
   billsTotalCount,
 }) => {
+  const [billToDelete, setBillToDelete] = useState(null);
+  const [deletedBillUuids, setDeletedBillUuids] = useState([]);
+  const prevSubmittingMutationRef = useRef();
+
+  useEffect(() => billToDelete && openConfirmDialog(), [billToDelete]);
+
+  useEffect(() => {
+    if (billToDelete && confirmed) {
+      confirmedAction();
+      setDeletedBillUuids([...deletedBillUuids, billToDelete.id]);
+    }
+    billToDelete && confirmed !== null && setBillToDelete(null);
+  }, [confirmed]);
+
+  useEffect(() => {
+    prevSubmittingMutationRef.current && !submittingMutation && journalize(mutation);
+  }, [submittingMutation]);
+
+  useEffect(() => {
+    prevSubmittingMutationRef.current = submittingMutation;
+  });
+
+  const confirmedAction = useCallback(
+    () =>
+      deleteBill(
+        billToDelete,
+        formatMessageWithValues(intl, "bill", "delete.mutationLabel", {
+          code: billToDelete.code,
+        }),
+      ),
+    [billToDelete],
+  );
+
+  const openConfirmDialog = useCallback(
+    () =>
+      coreConfirm(
+        formatMessageWithValues(intl, "bill", "delete.confirm.title", {
+          code: billToDelete.code,
+        }),
+        formatMessage(intl, "bill", "delete.confirm.message"),
+      ),
+    [billToDelete],
+  ); 
+
   const fetch = (params) => fetchBills(params);
 
-  const headers = () => [
-    "bill.subject",
-    "bill.thirdparty",
-    "bill.code",
-    "bill.dateBill",
-    "bill.amountTotal",
-    "bill.status.label",
-  ];
+  const headers = () => {
+    const headers = [
+      "bill.subject",
+      "bill.thirdparty",
+      "bill.code",
+      "bill.dateBill",
+      "bill.amountTotal",
+      "bill.status.label",
+    ];
+    if (rights.includes(RIGHT_BILL_UPDATE)) {
+      headers.push("emptyLabel");
+    }
+    return headers;
+  };
 
-  const itemFormatters = () => [
-    (bill) => getSubjectAndThirdpartyTypePicker(bill.subjectTypeName, bill.subject),
-    (bill) => getSubjectAndThirdpartyTypePicker(bill.thirdpartyTypeName, bill.thirdparty),
-    (bill) => bill.code,
-    (bill) => (!!bill.dateBill ? formatDateFromISO(modulesManager, intl, bill.dateBill) : EMPTY_STRING),
-    (bill) => bill.amountTotal,
-    (bill) => <InvoiceStatusPicker value={bill?.status} readOnly />,
-  ];
+  const itemFormatters = () => {
+    const formatters = [
+      (bill) => getSubjectAndThirdpartyTypePicker(modulesManager, bill.subjectTypeName, bill.subject),
+      (bill) => getSubjectAndThirdpartyTypePicker(modulesManager, bill.thirdpartyTypeName, bill.thirdparty),
+      (bill) => bill.code,
+      (bill) =>
+        !!bill.dateBill ? formatDateFromISO(modulesManager, intl, bill.dateBill) : EMPTY_STRING,
+      (bill) => bill.amountTotal,
+      (bill) => <InvoiceStatusPicker value={bill?.status} readOnly />,
+    ];
+    if (rights.includes(RIGHT_BILL_UPDATE)) {
+      formatters.push((bill) => (
+        <Tooltip title={formatMessage(intl, "invoice", "editButtonTooltip")}>
+          <IconButton
+            href={billUpdatePageUrl(bill)}
+            onClick={(e) => e.stopPropagation() && onDoubleClick(bill)}
+            disabled={deletedBillUuids.includes(bill.id)}
+          >
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+      ));
+    }
+    if (rights.includes(RIGHT_BILL_DELETE)) {
+      formatters.push((bill) => (
+        <Tooltip title={formatMessage(intl, "invoice", "deleteButtonTooltip")}>
+          <IconButton
+            onClick={() => onDelete(bill)}
+            disabled={bill?.status === STATUS.PAYED || deletedBillUuids.includes(bill.id)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      ));
+    }
+    return formatters;
+  };
 
   const rowIdentifier = (bill) => bill.id;
 
   const sorts = () => [
-    ["subjectTypeName", true],
-    ["thirdpartyId", true],
+    ["subjectType", true],
+    ["thirdpartyType", true],
     ["code", true],
     ["dateBill", true],
     ["amountTotal", true],
     ["status", true],
   ];
 
-  const getSubjectAndThirdpartyTypePickerContribution = (type) =>
-    modulesManager
-      .getContribs(INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_CONTRIBUTION_KEY)
-      .find((pickerComponent) => pickerComponent?.[INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_PROPS.TYPE] === type);
+  const billUpdatePageUrl = (bill) => modulesManager.getRef("bill.route.bill") + "/" + bill?.id;
 
-  const getSubjectAndThirdpartyTypePicker = (objectTypeName, objectJson) => {
-    const Picker =
-      getSubjectAndThirdpartyTypePickerContribution(objectTypeName)?.[
-        INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_PROPS.PICKER
-      ];
-    const object = JSON.parse(JSON.parse(objectJson));
-    const projection = getSubjectAndThirdpartyTypePickerProjection(objectTypeName);
-    const value = {};
-    projection.forEach((property) => {
-      if (!!property.match(PICKER_NESTED_PROPERTY_REGEX)) {
-        const propertyName = property.match(PICKER_NESTED_PROPERTY_NAME_REGEX)?.[0];
-        
-        const propertyProjection = property.match(PICKER_NESTED_PROPERTY_PROJECTION_REGEX)?.[0].slice(1, -1).split(" ");
-        value[propertyName] = _pick(object[propertyName], propertyProjection);
-      } else {
-        value[property] = object[property];
-      }
-    });
-    return !!Picker ? <Picker value={value} readOnly /> : objectTypeName;
-  };
+  const onDoubleClick = (bill, newTab = false) =>
+    rights.includes(RIGHT_BILL_UPDATE) &&
+    !deletedBillUuids.includes(bill.id) &&
+    historyPush(modulesManager, history, "bill.route.bill", [bill?.id], newTab);
 
-  const getSubjectAndThirdpartyTypePickerProjection = (type) =>
-    getSubjectAndThirdpartyTypePickerContribution(type)?.[
-      INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_PROPS.PICKER_PROJECTION
-    ];
+  const onDelete = (bill) => setBillToDelete(bill);
+
+  const isRowDisabled = (_, bill) => deletedBillUuids.includes(bill.id);
+
+  const defaultFilters = () => ({
+    isDeleted: {
+      value: false,
+      filter: "isDeleted: false",
+    },
+  });
 
   return (
     <Searcher
@@ -118,6 +196,10 @@ const BillSearcher = ({
       defaultPageSize={DEFAULT_PAGE_SIZE}
       defaultOrderBy="code"
       rowIdentifier={rowIdentifier}
+      onDoubleClick={onDoubleClick}
+      defaultFilters={defaultFilters()}
+      rowDisabled={isRowDisabled}
+      rowLocked={isRowDisabled}
     />
   );
 };
@@ -129,12 +211,16 @@ const mapStateToProps = (state) => ({
   bills: state.invoice.bills,
   billsPageInfo: state.invoice.billsPageInfo,
   billsTotalCount: state.invoice.billsTotalCount,
+  confirmed: state.core.confirmed,
+  submittingMutation: state.invoice.submittingMutation,
+  mutation: state.invoice.mutation,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
     {
       fetchBills,
+      deleteBill,
       coreConfirm,
       journalize,
     },
@@ -142,4 +228,6 @@ const mapDispatchToProps = (dispatch) => {
   );
 };
 
-export default withModulesManager(injectIntl(connect(mapStateToProps, mapDispatchToProps)(BillSearcher)));
+export default withHistory(
+  withModulesManager(injectIntl(connect(mapStateToProps, mapDispatchToProps)(BillSearcher))),
+);
