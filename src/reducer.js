@@ -24,6 +24,8 @@ export const ACTION_TYPE = {
   SEARCH_INVOICE_EVENTS: "INVOICE_INVOICE_EVENTS",
   CREATE_INVOICE_EVENT_MESSAGE: "INVOICE_CREATE_INVOICE_EVENT_MESSAGE",
   SEARCH_BILLS: "SEARCH_BILLS",
+  GET_BILL: "BILL_BILL",
+  DELETE_BILL: "BILL_DELETE_BILL",
 };
 
 function reducer(
@@ -235,7 +237,7 @@ function reducer(
         bills: parseData(action.payload.data.bill)?.map((bill) => ({
           ...bill,
           id: decodeId(bill.id),
-          status: getEnumValue(bill?.status),
+          status: getEnumValue(bill?.status)
         })),
         billsPageInfo: pageInfo(action.payload.data.bill),
         billsTotalCount: !!action.payload.data.bill ? action.payload.data.bill.totalCount : null,
@@ -246,6 +248,34 @@ function reducer(
         ...state,
         fetchingBills: false,
         errorBills: formatServerError(action.payload),
+      };
+    case REQUEST(ACTION_TYPE.GET_BILL):
+      return {
+        ...state,
+        fetchingBill: true,
+        fetchedBill: false,
+        bill: null,
+        errorBill: null,
+      };
+    case SUCCESS(ACTION_TYPE.GET_BILL):
+      return {
+        ...state,
+        fetchingBill: false,
+        fetchedBill: true,
+        bill: parseData(action.payload.data.bill).map((bill) => ({
+          ...bill,
+          id: decodeId(bill.id),
+          status: getEnumValue(bill?.status),
+          subjectTypeNameLabel: (bill?.subjectTypeName).replace(/\s/g, ""),
+          thirdpartyTypeNameLabel: (bill?.thirdpartyTypeName).replace(/\s/g, ""),
+        }))?.[0],
+        errorBill: null,
+      };
+    case ERROR(ACTION_TYPE.GET_BILL):
+      return {
+        ...state,
+        fetchingBill: false,
+        errorBill: formatServerError(action.payload),
       };
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);
@@ -261,6 +291,8 @@ function reducer(
       return dispatchMutationResp(state, "deleteInvoicePayment", action);
     case SUCCESS(ACTION_TYPE.CREATE_INVOICE_EVENT_MESSAGE):
       return dispatchMutationResp(state, "createInvoiceEventMessage", action);
+    case SUCCESS(ACTION_TYPE.DELETE_BILL):
+      return dispatchMutationResp(state, "deleteBill", action);
     default:
       return state;
   }
