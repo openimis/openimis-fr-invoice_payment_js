@@ -59,6 +59,14 @@ export const SUBJECT_TYPE_OPTIONS = [
     label: "Family",
   },
 ];
+
+export const SUBJECT_TYPE_OPTIONS_BILL = [
+  {
+    value: "batchrun",
+    label: "Batch Run",
+  },
+];
+
 export const THIRDPARTY_TYPE_OPTIONS = [
   {
     value: "insuree",
@@ -69,6 +77,18 @@ export const THIRDPARTY_TYPE_OPTIONS = [
     label: "Policy Holder",
   },
 ];
+
+export const THIRDPARTY_TYPE_OPTIONS_BILL = [
+  {
+    value: "healthfacility",
+    label: "Health Facility",
+  },
+  {
+    value: "insuree",
+    label: "Insuree",
+  },
+];
+
 export const INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_CONTRIBUTION_KEY = "invoice.SubjectAndThirdpartyPicker";
 export const INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_PROPS = {
   TYPE: "type",

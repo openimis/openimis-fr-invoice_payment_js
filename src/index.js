@@ -5,12 +5,14 @@ import LegalAndFinanceMainMenu from "./menus/LegalAndFinanceMainMenu";
 import InvoicesPage from "./pages/InvoicesPage";
 import InvoiceStatusPicker from "./pickers/InvoiceStatusPicker";
 import InvoicePage from "./pages/InvoicePage";
+import BillsPage from "./pages/BillsPage";
 import { InvoiceLineItemsTabLabel, InvoiceLineItemsTabPanel } from "./components/InvoiceLineItemsTab";
 import { InvoicePaymentsTabLabel, InvoicePaymentsTabPanel } from "./components/InvoicePaymentsTab";
 import { InvoiceEventsTabLabel, InvoiceEventsTabPanel } from "./components/InvoiceEventsTab";
 
 const ROUTE_INVOICES = "invoices";
 const ROUTE_INVOICE = "invoices/invoice";
+const ROUTE_BILLS = "bills";
 
 const DEFAULT_CONFIG = {
   "translations": [{ key: "en", messages: flatten(messages_en) }],
@@ -19,6 +21,7 @@ const DEFAULT_CONFIG = {
   "core.Router": [
     { path: ROUTE_INVOICES, component: InvoicesPage },
     { path: ROUTE_INVOICE + "/:invoice_uuid?", component: InvoicePage },
+    { path: ROUTE_BILLS, component: BillsPage },
   ],
   "refs": [
     { key: "invoice.route.invoice", ref: ROUTE_INVOICE },
