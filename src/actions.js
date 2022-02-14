@@ -100,6 +100,20 @@ const BILL_FULL_PROJECTION = [
   "dateBill",
 ];
 
+const BILL_LINE_ITEM_FULL_PROJECTION = [
+  "code",
+  "id",
+  "description",
+  "ledgerAccount",
+  "quantity",
+  "unitPrice",
+  "discount",
+  "deduction",
+  "amountTotal",
+  "amountNet",
+  "taxAnalysis",
+];
+
 const INVOICE_EVENT_FULL_PROJECTION = ["eventType", "message"];
 
 const formatInvoicePaymentGQL = (payment) =>
@@ -256,4 +270,9 @@ export function deleteBill(bill, clientMutationLabel) {
       requestedDateTime,
     },
   );
+}
+
+export function fetchBillLineItems(params) {
+  const payload = formatPageQueryWithCount("billItem", params, BILL_LINE_ITEM_FULL_PROJECTION);
+  return graphql(payload, ACTION_TYPE.SEARCH_BILL_LINE_ITEMS);
 }

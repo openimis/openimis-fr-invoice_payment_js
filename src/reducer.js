@@ -26,6 +26,7 @@ export const ACTION_TYPE = {
   SEARCH_BILLS: "SEARCH_BILLS",
   GET_BILL: "BILL_BILL",
   DELETE_BILL: "BILL_DELETE_BILL",
+  SEARCH_BILL_LINE_ITEMS: "BILL_BILL_LINE_ITEMS",
 };
 
 function reducer(
@@ -71,6 +72,12 @@ function reducer(
     errorBill: null,
     fetchedBill: false,
     bill: null,
+    fetchingBillLineItems: false,
+    errorBillLineItems: null,
+    fetchedBillLineItems: false,
+    billLineItems: [],
+    billLineItemsPageInfo: {},
+    billLineItemsTotalCount: 0,
   },
   action,
 ) {
@@ -276,6 +283,35 @@ function reducer(
         ...state,
         fetchingBill: false,
         errorBill: formatServerError(action.payload),
+      };
+    case REQUEST(ACTION_TYPE.SEARCH_BILL_LINE_ITEMS):
+      return {
+        ...state,
+        fetchingBillLineItems: true,
+        fetchedBillLineItems: false,
+        billLineItems: [],
+        billLineItemsPageInfo: {},
+        billLineItemsTotalCount: 0,
+        errorBillLineItems: null,
+      };
+    case SUCCESS(ACTION_TYPE.SEARCH_BILL_LINE_ITEMS):
+      return {
+        ...state,
+        fetchingBillLineItems: false,
+        fetchedBillLineItems: true,
+        billLineItems: parseData(action.payload.data.billItem)?.map((billItem) => ({
+          ...billItem,
+          id: decodeId(billItem.id),
+        })),
+        billLineItemsPageInfo: pageInfo(action.payload.data.billItem),
+        billLineItemsTotalCount: action.payload.data.billItem?.totalCount,
+        errorBillLineItems: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.SEARCH_BILL_LINE_ITEMS):
+      return {
+        ...state,
+        fetchingBillLineItems: false,
+        errorBillLineItems: formatServerError(action.payload),
       };
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);
