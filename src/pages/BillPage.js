@@ -17,6 +17,7 @@ import { RIGHT_BILL_UPDATE, STATUS } from "../constants";
 import { fetchBill, deleteBill } from "../actions";
 import BillHeadPanel from "../components/BillHeadPanel";
 import DeleteIcon from "@material-ui/icons/Delete";
+import BillTabPanel from "../components/BillTabPanel";
 
 const styles = (theme) => ({
   page: theme.page,
@@ -102,6 +103,7 @@ const BillPage = ({
           back={back}
           onChange={onChange}
           HeadPanel={BillHeadPanel}
+          Panels={[BillTabPanel]}
           rights={rights}
           actions={actions}
         />

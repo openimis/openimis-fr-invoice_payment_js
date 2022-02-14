@@ -172,5 +172,23 @@
   "bills": {
     "pageTitle": "Bills",
     "searcherResultsTitle": "{billsTotalCount} Bills Found"
+  },
+  "billItems": {
+    "label": "Line Items",
+    "searcher": {
+      "resultsTitle": "{billLineItemsTotalCount} Line Items Found"
+    }
+  },
+  "billItem": {
+    "code": "Code",
+    "description": "Description",
+    "ledgerAccount": "Ledger Account",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "discount": "Discount",
+    "deduction": "Deduction",
+    "amountTotal": "Amount Total",
+    "amountNet": "Amount Net",
+    "amountNetTooltip": "Tax: {value}"
   }
 }
