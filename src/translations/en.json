@@ -190,5 +190,42 @@
     "amountTotal": "Amount Total",
     "amountNet": "Amount Net",
     "amountNetTooltip": "Tax: {value}"
+  },
+  "billPayments": {
+    "label": "Payments",
+    "searcherResultsTitle": "{billPaymentsTotalCount} Payments Found"
+  },
+  "billPayment": {
+    "status": {
+      "label": "Status",
+      "REJECTED": "Rejected",
+      "ACCEPTED": "Accepted",
+      "REFUNDED": "Refunded",
+      "CANCELLED": "Cancelled"
+    },
+    "codeExt":"Code",
+    "label": "Label",
+    "codeTp": "Code Thirdparty",
+    "codeReceipt": "Receipt Number",
+    "amountPayed": "Amount Payed",
+    "fees": "Fees",
+    "amountReceived": "Amount Received",
+    "datePayment": "Payment Date",
+    "paymentOrigin": "Payment Origin",
+    "create": {
+      "label": "Create new Payment",
+      "mutationLabel": "Create Bill Payment {billPaymentLabel} for {billCode}"
+    },
+    "update": {
+      "label": "Update Payment",
+      "mutationLabel":"Update Bill Payment {billPaymentLabel} of {invoiceCode}"
+    },
+    "delete": {
+      "confirm": {
+        "title": "Delete {billPaymentLabel}?",
+        "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
+      },
+      "mutationLabel": "Delete Bill Payment {billPaymentLabel} of {billCode}"
+    }
   }
 }

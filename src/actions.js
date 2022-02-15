@@ -101,8 +101,8 @@ const BILL_FULL_PROJECTION = [
 ];
 
 const BILL_LINE_ITEM_FULL_PROJECTION = [
-  "code",
   "id",
+  "code",
   "description",
   "ledgerAccount",
   "quantity",
@@ -112,6 +112,20 @@ const BILL_LINE_ITEM_FULL_PROJECTION = [
   "amountTotal",
   "amountNet",
   "taxAnalysis",
+];
+
+const BILL_PAYMENT_FULL_PROJECTION = [
+  "id",
+  "status",
+  "codeExt",
+  "label",
+  "codeTp",
+  "codeReceipt",
+  "amountPayed",
+  "fees",
+  "amountReceived",
+  "datePayment",
+  "paymentOrigin",
 ];
 
 const INVOICE_EVENT_FULL_PROJECTION = ["eventType", "message"];
@@ -137,6 +151,22 @@ const formatInvoiceEventMessageGQL = (eventMessage) =>
     ${!!eventMessage.invoiceId ? `invoiceId: "${eventMessage.invoiceId}"` : ""}
     ${!!eventMessage.eventType ? `eventType: ${eventMessage.eventType}` : ""}
     ${!!eventMessage.message ? `message: "${eventMessage.message}"` : ""}
+  `;
+
+const formatBillPaymentGQL = (payment) =>
+  `
+    ${!!payment.id ? `id: "${payment.id}"` : ""}
+    ${!!payment.billId ? `billId: "${payment.billId}"` : ""}
+    ${!!payment.status ? `status: ${payment.status}` : ""}
+    ${!!payment.codeExt ? `codeExt: "${payment.codeExt}"` : ""}
+    ${!!payment.label ? `label: "${payment.label}"` : ""}
+    ${!!payment.codeTp ? `codeTp: "${payment.codeTp}"` : ""}
+    ${!!payment.codeReceipt ? `codeReceipt: "${payment.codeReceipt}"` : ""}
+    ${!!payment.amountPayed ? `amountPayed: "${payment.amountPayed}"` : ""}
+    ${!!payment.fees ? `fees: "${payment.fees}"` : ""}
+    ${!!payment.amountReceived ? `amountReceived: "${payment.amountReceived}"` : ""}
+    ${!!payment.datePayment ? `datePayment: "${payment.datePayment}"` : ""}
+    ${!!payment.paymentOrigin ? `paymentOrigin: "${payment.paymentOrigin}"` : ""}
   `;
 
 export function fetchInvoices(params) {
@@ -275,4 +305,25 @@ export function deleteBill(bill, clientMutationLabel) {
 export function fetchBillLineItems(params) {
   const payload = formatPageQueryWithCount("billItem", params, BILL_LINE_ITEM_FULL_PROJECTION);
   return graphql(payload, ACTION_TYPE.SEARCH_BILL_LINE_ITEMS);
+}
+
+export function fetchBillPayments(params) {
+  const payload = formatPageQueryWithCount("billPayment", params, BILL_PAYMENT_FULL_PROJECTION);
+  return graphql(payload, ACTION_TYPE.SEARCH_BILL_PAYMENT);
+}
+
+export function deleteBillPayment(billPayment, clientMutationLabel) {
+  const billPaymentUuids = `uuids: ["${billPayment?.id}"]`;
+  const mutation = formatMutation("deleteBillPayment", billPaymentUuids, clientMutationLabel);
+  const requestedDateTime = new Date();
+  return graphql(
+    mutation.payload,
+    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.DELETE_BILL), ERROR(ACTION_TYPE.MUTATION)],
+    {
+      actionType: ACTION_TYPE.DELETE_BILL_PAYMENT,
+      clientMutationId: mutation.clientMutationId,
+      clientMutationLabel,
+      requestedDateTime,
+    },
+  );
 }

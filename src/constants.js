@@ -108,6 +108,7 @@ export const INVOICE_EVENTS_TAB_VALUE = "invoiceEventsTab";
 export const BILL_TABS_PANEL_CONTRIBUTION_KEY = "bill.TabPanel.panel";
 export const BILL_TABS_LABEL_CONTRIBUTION_KEY = "bill.TabPanel.label";
 export const BILL_LINE_ITEMS_TAB_VALUE = "billLineItemsTab";
+export const BILL_PAYMENTS_TAB_VALUE = "billPaymentsTab";
 
 export const EMPTY_PAYMENT = {
   status: null,
