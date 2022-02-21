@@ -143,7 +143,7 @@ const styles = (theme) => ({
             module="bill"
             label="billPayment.paymentOrigin"
             value={filterValue("paymentOrigin")}
-            onChange={onChangeFilter("paymentOrigin")}
+            onChange={onChangeStringFilter("paymentOrigin", CONTAINS_LOOKUP)}
           />
         </Grid>
       </Grid>
