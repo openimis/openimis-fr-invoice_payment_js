@@ -11,6 +11,7 @@ import { InvoiceLineItemsTabLabel, InvoiceLineItemsTabPanel } from "./components
 import { InvoicePaymentsTabLabel, InvoicePaymentsTabPanel } from "./components/InvoicePaymentsTab";
 import { InvoiceEventsTabLabel, InvoiceEventsTabPanel } from "./components/InvoiceEventsTab";
 import { BillLineItemsTabLabel, BillLineItemsTabPanel } from "./components/BillLineItemsTab";
+import { BillPaymentsTabLabel, BillPaymentsTabPanel } from "./components/BillPaymentsTab";
 
 const ROUTE_INVOICES = "invoices";
 const ROUTE_INVOICE = "invoices/invoice";
@@ -34,8 +35,8 @@ const DEFAULT_CONFIG = {
   ],
   "invoice.TabPanel.label": [InvoiceLineItemsTabLabel, InvoicePaymentsTabLabel, InvoiceEventsTabLabel],
   "invoice.TabPanel.panel": [InvoiceLineItemsTabPanel, InvoicePaymentsTabPanel, InvoiceEventsTabPanel],
-  "bill.TabPanel.label": [BillLineItemsTabLabel],
-  "bill.TabPanel.panel": [BillLineItemsTabPanel],
+  "bill.TabPanel.label": [BillLineItemsTabLabel, BillPaymentsTabLabel],
+  "bill.TabPanel.panel": [BillLineItemsTabPanel, BillPaymentsTabPanel],
 };
 
 export const InvoiceModule = (cfg) => {

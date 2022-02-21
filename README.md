@@ -12,10 +12,10 @@ It is dedicated to be deployed as a module of [openimis-fe_js](https://github.co
   **Bills** (invoice.menu.bills key), displayed if user has the right `156101`
 
 ## Other Contributions
-* `core.Router`: registering `invoices`, `invoice` routes in openIMIS client-side router
+* `core.Router`: registering `invoices`, `invoice`, `bills`, `bill` routes in openIMIS client-side router
 
 ## Available Contribution Points
-* `invoice.SubjectAndThirdpartyPicker` used to provide pickers for both Invoice Subject and Invoice Thirdparty; required structure:
+* `invoice.SubjectAndThirdpartyPicker` used to provide pickers for both Invoice/Bill Subject and Invoice/Bill Thirdparty; required structure:
   ```js
   [
     {
@@ -49,7 +49,11 @@ It is dedicated to be deployed as a module of [openimis-fe_js](https://github.co
 * `SEARCH_BILLS_{REQ|RESP|ERR}` fetching Bills (as triggered by the searcher)
 * `BILL_BILL_{REQ|RESP|ERR}` fetching Bill
 * `BILL_BILL_LINE_ITEMS_{REQ|RESP|ERR}` fetching Bill Line Items (as triggered by the searcher)
+* `BILL_BILL_PAYMENTS_{REQ|RESP|ERR}` fetching Bill Payments (as triggered by the searcher)
 * `BILL_DELETE_BILL_RESP` receiving a result of delete Bill mutation
+* `BILL_CREATE_BILL_PAYMENT_RESP` receiving a result of create Bill Payment mutation
+* `BILL_UPDATE_BILL_PAYMENT_RESP` receiving a result of update Bill Payment mutation
+* `BILL_DELETE_BILL_PAYMENT_RESP` receiving a result of delete Bill Payment mutation
 
 ## Other Modules Listened Redux Actions
 None
