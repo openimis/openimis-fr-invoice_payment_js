@@ -17,7 +17,9 @@ import { RIGHT_BILL_UPDATE, STATUS } from "../constants";
 import { fetchBill, deleteBill } from "../actions";
 import BillHeadPanel from "../components/BillHeadPanel";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { getEnumValue } from "../util/enum";
 import BillTabPanel from "../components/BillTabPanel";
+import { ACTION_TYPE } from "../reducer";
 
 const styles = (theme) => ({
   page: theme.page,
@@ -36,8 +38,10 @@ const BillPage = ({
   confirmed,
   submittingMutation,
   mutation,
+  journalize,
 }) => {
   const [editedBill, setEditedBill] = useState({});
+  const [confirmedAction, setConfirmedAction] = useState(() => null);
   const prevSubmittingMutationRef = useRef();
 
   useEffect(() => {
@@ -51,7 +55,7 @@ const BillPage = ({
   useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
       journalize(mutation);
-      back();
+      mutation?.actionType === ACTION_TYPE.DELETE_BILL && back();
     }
   }, [submittingMutation]);
 
@@ -67,28 +71,30 @@ const BillPage = ({
 
   const titleParams = (bill) => ({ label: bill?.code });
 
-  const confirmedAction = () =>
-    deleteBill(
-      bill,
-      formatMessageWithValues(intl, "bill", "delete.mutationLabel", {
-        code: bill?.code,
-      }),
-    );
+  const deleteBillCallback = () => deleteBill(
+    bill,
+    formatMessageWithValues(intl, "invoice", "bill.delete.mutationLabel", {
+      code: bill?.code,
+    }),
+  );
 
-  const openConfirmDialog = () =>
+  const openDeleteBillConfirmDialog = () => {
+    setConfirmedAction(() => deleteBillCallback);
     coreConfirm(
-      formatMessageWithValues(intl, "bill", "delete.confirm.title", {
+      formatMessageWithValues(intl, "invoice", "bill.delete.confirm.title", {
         code: bill?.code,
       }),
-      formatMessage(intl, "bill", "delete.confirm.message"),
+      formatMessage(intl, "invoice", "bill.delete.confirm.message"),
     );
+  };
 
   const actions = [
-    !!bill && bill?.status !== STATUS.PAYED && {
-      doIt: openConfirmDialog,
-      icon: <DeleteIcon />,
-      tooltip: formatMessage(intl, "invoice", "deleteButtonTooltip"),
-    },
+    !!bill && 
+      getEnumValue(bill?.status) !== STATUS.PAYED && {
+        doIt: openDeleteBillConfirmDialog,
+        icon: <DeleteIcon />,
+        tooltip: formatMessage(intl, "invoice", "deleteButtonTooltip"),
+      },
   ];
 
   return (
@@ -106,6 +112,7 @@ const BillPage = ({
           Panels={[BillTabPanel]}
           rights={rights}
           actions={actions}
+          setConfirmedAction={setConfirmedAction}
         />
       </div>
     )

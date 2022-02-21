@@ -1,8 +1,9 @@
 import React from "react";
-import { Tab } from "@material-ui/core";
-import { formatMessage, PublishedComponent } from "@openimis/fe-core";
-import { BILL_PAYMENTS_TAB_VALUE, RIGHT_BILL_PAYMENT_SEARCH } from "../constants";
+import { Tab, Grid, Typography } from "@material-ui/core";
+import { formatMessage, PublishedComponent, FormattedMessage } from "@openimis/fe-core";
+import { BILL_PAYMENTS_TAB_VALUE, RIGHT_BILL_PAYMENT_SEARCH, RIGHT_BILL_PAYMENT_CREATE } from "../constants";
 import BillPaymentsSearcher from "./BillPaymentsSearcher";
+import CreateBillPaymentDialog from "../dialogs/BillPaymentDialog";
 
 
 const BillPaymentsTabLabel = ({ intl, rights, onChange, tabStyle, isSelected }) =>
@@ -17,14 +18,21 @@ const BillPaymentsTabLabel = ({ intl, rights, onChange, tabStyle, isSelected }) 
   );
 
 
-const BillPaymentsTabPanel = ({ value, bill }) => (
-  <PublishedComponent
-    pubRef="policyHolder.TabPanel"
-    module="bill"
-    index={BILL_PAYMENTS_TAB_VALUE}
-    value={value}
-  >
-    <BillPaymentsSearcher bill={bill} />
+const BillPaymentsTabPanel = ({ rights, value, bill, setConfirmedAction }) => (
+  <PublishedComponent pubRef="policyHolder.TabPanel" module="bill" index={BILL_PAYMENTS_TAB_VALUE} value={value}>
+    {rights?.includes(RIGHT_BILL_PAYMENT_CREATE) && (
+      <Grid container justify="flex-end" alignItems="center" spacing={1}>
+        <Grid item>
+          <Typography>
+            <FormattedMessage module="invoice" id="billPayment.create.label" />
+          </Typography>
+        </Grid>
+        <Grid item>
+          <CreateBillPaymentDialog bill={bill} />
+        </Grid>
+      </Grid>
+     )}
+  <BillPaymentsSearcher bill={bill} rights={rights} setConfirmedAction={setConfirmedAction} />
   </PublishedComponent>
 );
 

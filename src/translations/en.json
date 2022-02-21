@@ -218,7 +218,7 @@
     },
     "update": {
       "label": "Update Payment",
-      "mutationLabel":"Update Bill Payment {billPaymentLabel} of {invoiceCode}"
+      "mutationLabel":"Update Bill Payment {billPaymentLabel} of {billCode}"
     },
     "delete": {
       "confirm": {

@@ -312,13 +312,43 @@ export function fetchBillPayments(params) {
   return graphql(payload, ACTION_TYPE.SEARCH_BILL_PAYMENT);
 }
 
+export function createBillPayment(billPayment, clientMutationLabel) {
+  const mutation = formatMutation("createBillPayment", formatBillPaymentGQL(billPayment), clientMutationLabel);
+  const requestedDateTime = new Date();
+  return graphql(
+    mutation.payload,
+    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.CREATE_BILL_PAYMENT), ERROR(ACTION_TYPE.MUTATION)],
+    {
+      actionType: ACTION_TYPE.CREATE_BILL_PAYMENT,
+      clientMutationId: mutation.clientMutationId,
+      clientMutationLabel,
+      requestedDateTime,
+    },
+  );
+}
+
+export function updateBillPayment(billPayment, clientMutationLabel) {
+  const mutation = formatMutation("updateBillPayment", formatBillPaymentGQL(billPayment), clientMutationLabel);
+  const requestedDateTime = new Date();
+  return graphql(
+    mutation.payload,
+    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.UPDATE_BILL_PAYMENT), ERROR(ACTION_TYPE.MUTATION)],
+    {
+      actionType: ACTION_TYPE.UPDATE_BILL_PAYMENT,
+      clientMutationId: mutation.clientMutationId,
+      clientMutationLabel,
+      requestedDateTime,
+    },
+  );
+}
+
 export function deleteBillPayment(billPayment, clientMutationLabel) {
   const billPaymentUuids = `uuids: ["${billPayment?.id}"]`;
   const mutation = formatMutation("deleteBillPayment", billPaymentUuids, clientMutationLabel);
   const requestedDateTime = new Date();
   return graphql(
     mutation.payload,
-    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.DELETE_BILL), ERROR(ACTION_TYPE.MUTATION)],
+    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.DELETE_BILL_PAYMENT), ERROR(ACTION_TYPE.MUTATION)],
     {
       actionType: ACTION_TYPE.DELETE_BILL_PAYMENT,
       clientMutationId: mutation.clientMutationId,

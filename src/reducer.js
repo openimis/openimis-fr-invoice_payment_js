@@ -342,6 +342,7 @@ function reducer(
         billPayments: parseData(action.payload.data.billPayment)?.map((billPayment) => ({
           ...billPayment,
           id: decodeId(billPayment.id),
+          status: getEnumValue(billPayment?.status),
         })),
         billPaymentsPageInfo: pageInfo(action.payload.data.billPayment),
         billPaymentsTotalCount: action.payload.data.billPayment?.totalCount,
@@ -369,6 +370,10 @@ function reducer(
       return dispatchMutationResp(state, "createInvoiceEventMessage", action);
     case SUCCESS(ACTION_TYPE.DELETE_BILL):
       return dispatchMutationResp(state, "deleteBill", action);
+    case SUCCESS(ACTION_TYPE.CREATE_BILL_PAYMENT):
+      return dispatchMutationResp(state, "createBillPayment", action);
+    case SUCCESS(ACTION_TYPE.UPDATE_BILL_PAYMENT):
+      return dispatchMutationResp(state, "updateBillPayment", action);
     case SUCCESS(ACTION_TYPE.DELETE_BILL_PAYMENT):
       return dispatchMutationResp(state, "deleteBillPayment", action);
     default:
