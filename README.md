@@ -54,6 +54,8 @@ It is dedicated to be deployed as a module of [openimis-fe_js](https://github.co
 * `BILL_CREATE_BILL_PAYMENT_RESP` receiving a result of create Bill Payment mutation
 * `BILL_UPDATE_BILL_PAYMENT_RESP` receiving a result of update Bill Payment mutation
 * `BILL_DELETE_BILL_PAYMENT_RESP` receiving a result of delete Bill Payment mutation
+* `BILL_BILL_EVENTS_{REQ|RESP|ERR}` fetching Bill Events (as triggered by the searcher)
+* `BILL_CREATE_BILL_EVENT_MESSAGE_RESP` receiving a result of create Bill Event Message mutation
 
 ## Other Modules Listened Redux Actions
 None
