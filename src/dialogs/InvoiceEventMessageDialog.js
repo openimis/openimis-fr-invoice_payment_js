@@ -15,7 +15,7 @@ import { bindActionCreators } from "redux";
 import { EMPTY_EVENT_MESSAGE } from "../constants";
 import { defaultDialogStyles } from "../util/styles";
 
-const InvoicePaymentDialog = ({ intl, classes, invoice, createInvoiceEventMessage }) => {
+const InvoiceEventMessageDialog = ({ intl, classes, invoice, createInvoiceEventMessage }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [eventMessage, setEventMessage] = useState({ invoiceId: invoice.id, ...EMPTY_EVENT_MESSAGE });
 
@@ -82,5 +82,5 @@ const InvoicePaymentDialog = ({ intl, classes, invoice, createInvoiceEventMessag
 const mapDispatchToProps = (dispatch) => bindActionCreators({ createInvoiceEventMessage }, dispatch);
 
 export default injectIntl(
-  withTheme(withStyles(defaultDialogStyles)(connect(null, mapDispatchToProps)(InvoicePaymentDialog))),
+  withTheme(withStyles(defaultDialogStyles)(connect(null, mapDispatchToProps)(InvoiceEventMessageDialog))),
 );
