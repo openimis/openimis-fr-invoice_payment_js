@@ -169,6 +169,13 @@ const formatBillPaymentGQL = (payment) =>
     ${!!payment.paymentOrigin ? `paymentOrigin: "${payment.paymentOrigin}"` : ""}
   `;
 
+const formatBillEventMessageGQL = (eventMessage) =>
+  `
+    ${!!eventMessage.billId ? `billId: "${eventMessage.billId}"` : ""}
+    ${!!eventMessage.eventType ? `eventType: ${eventMessage.eventType}` : ""}
+    ${!!eventMessage.message ? `message: "${eventMessage.message}"` : ""}
+  `;
+
 export function fetchInvoices(params) {
   const payload = formatPageQueryWithCount("invoice", params, INVOICE_FULL_PROJECTION);
   return graphql(payload, ACTION_TYPE.SEARCH_INVOICES);
@@ -313,7 +320,11 @@ export function fetchBillPayments(params) {
 }
 
 export function createBillPayment(billPayment, clientMutationLabel) {
-  const mutation = formatMutation("createBillPayment", formatBillPaymentGQL(billPayment), clientMutationLabel);
+  const mutation = formatMutation(
+    "createBillPayment", 
+    formatBillPaymentGQL(billPayment), 
+    clientMutationLabel
+  );
   const requestedDateTime = new Date();
   return graphql(
     mutation.payload,
@@ -328,7 +339,11 @@ export function createBillPayment(billPayment, clientMutationLabel) {
 }
 
 export function updateBillPayment(billPayment, clientMutationLabel) {
-  const mutation = formatMutation("updateBillPayment", formatBillPaymentGQL(billPayment), clientMutationLabel);
+  const mutation = formatMutation(
+    "updateBillPayment", 
+    formatBillPaymentGQL(billPayment), 
+    clientMutationLabel
+  );
   const requestedDateTime = new Date();
   return graphql(
     mutation.payload,
@@ -351,6 +366,30 @@ export function deleteBillPayment(billPayment, clientMutationLabel) {
     [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.DELETE_BILL_PAYMENT), ERROR(ACTION_TYPE.MUTATION)],
     {
       actionType: ACTION_TYPE.DELETE_BILL_PAYMENT,
+      clientMutationId: mutation.clientMutationId,
+      clientMutationLabel,
+      requestedDateTime,
+    },
+  );
+}
+
+export function fetchBillEvents(params) {
+  const payload = formatPageQueryWithCount("billEvent", params, INVOICE_EVENT_FULL_PROJECTION);
+  return graphql(payload, ACTION_TYPE.SEARCH_BILL_EVENTS);
+}
+
+export function createBillEventType(billEvent, clientMutationLabel) {
+  const mutation = formatMutation(
+    "createBillEventType", 
+    formatBillEventMessageGQL(billEvent), 
+    clientMutationLabel
+  );
+  const requestedDateTime = new Date();
+  return graphql(
+    mutation.payload,
+    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.CREATE_BILL_EVENT_MESSAGE), ERROR(ACTION_TYPE.MUTATION)],
+    {
+      actionType: ACTION_TYPE.CREATE_BILL_EVENT_MESSAGE,
       clientMutationId: mutation.clientMutationId,
       clientMutationLabel,
       requestedDateTime,

@@ -227,5 +227,26 @@
       },
       "mutationLabel": "Delete Bill Payment {billPaymentLabel} of {billCode}"
     }
+  },
+  "billEvents": {
+    "label": "Events",
+    "searcherResultsTitle":"{billEventsTotalCount} Events Found"
+  },
+  "billEvent": {
+    "eventType": {
+      "label": "Type",
+      "MESSAGE": "Message",
+      "STATUS": "Status",
+      "WARNING": "Warning",
+      "PAYMENT": "Payment",
+      "PAYMENT_ERROR": "Payment Error"
+    },
+    "message": "Message"
+  },
+  "billEventMessage": {
+    "create": {
+      "label": "Create new Comment",
+      "mutationLabel": "Create Bill Event Message for {billCode}"
+    }
   }
 }

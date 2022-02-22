@@ -31,6 +31,8 @@ export const ACTION_TYPE = {
   CREATE_BILL_PAYMENT: "BILL_CREATE_BILL_PAYMENT",
   UPDATE_BILL_PAYMENT: "BILL_UPDATE_BILL_PAYMENT",
   DELETE_BILL_PAYMENT: "BILL_DELETE_BILL_PAYMENT",
+  SEARCH_BILL_EVENTS: "BILL_BILL_EVENTS",
+  CREATE_BILL_EVENT_MESSAGE: "BILL_CREATE_BILL_EVENT_MESSAGE",
 };
 
 function reducer(
@@ -76,6 +78,7 @@ function reducer(
     errorBill: null,
     fetchedBill: false,
     bill: null,
+    
     fetchingBillLineItems: false,
     errorBillLineItems: null,
     fetchedBillLineItems: false,
@@ -89,6 +92,13 @@ function reducer(
     billPayments: [],
     billPaymentsPageInfo: {},
     billPaymentsTotalCount: 0,
+
+    fetchingBillEvents: false,
+    errorBillEvents: null,
+    fetchedBillEvents: false,
+    billEvents: [],
+    billEventsPageInfo: {},
+    billEventsTotalCount: 0,
   },
   action,
 ) {
@@ -354,6 +364,35 @@ function reducer(
         fetchingBillPayments: false,
         errorBillPayments: formatServerError(action.payload),
       };
+    case REQUEST(ACTION_TYPE.SEARCH_BILL_EVENTS):
+      return {
+        ...state,
+        fetchingBillEvents: true,
+        fetchedBillEvents: false,
+        billEvents: [],
+        billEventsPageInfo: {},
+        billEventsTotalCount: 0,
+        errorBillEvents: null,
+      };
+    case SUCCESS(ACTION_TYPE.SEARCH_BILL_EVENTS):
+      return {
+        ...state,
+        fetchingBillEvents: false,
+        fetchedBillEvents: true,
+        billEvents: parseData(action.payload.data.billEvent)?.map((billEvent) => ({
+          ...billEvent,
+          eventType: getEnumValue(billEvent?.eventType),
+        })),
+        billEventsPageInfo: pageInfo(action.payload.data.billEvent),
+        billEventsTotalCount: action.payload.data.billEvent?.totalCount,
+        errorBillEvents: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.SEARCH_BILL_EVENTS):
+      return {
+        ...state,
+        fetchingBillEvents: false,
+        errorBillEvents: formatServerError(action.payload),
+      };
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);
     case ERROR(ACTION_TYPE.MUTATION):
@@ -376,6 +415,8 @@ function reducer(
       return dispatchMutationResp(state, "updateBillPayment", action);
     case SUCCESS(ACTION_TYPE.DELETE_BILL_PAYMENT):
       return dispatchMutationResp(state, "deleteBillPayment", action);
+    case SUCCESS(ACTION_TYPE.CREATE_BILL_EVENT_MESSAGE):
+      return dispatchMutationResp(state, "createBillEventType", action);
     default:
       return state;
   }
