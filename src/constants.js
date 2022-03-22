@@ -87,6 +87,10 @@ export const THIRDPARTY_TYPE_OPTIONS_BILL = [
     value: "insuree",
     label: "Insuree",
   },
+  {
+    value: "payer",
+    label: "Payer",
+  },
 ];
 
 export const INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_CONTRIBUTION_KEY = "invoice.SubjectAndThirdpartyPicker";
