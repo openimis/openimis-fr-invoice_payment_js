@@ -65,6 +65,10 @@ export const SUBJECT_TYPE_OPTIONS_BILL = [
     value: "batchrun",
     label: "Batch Run",
   },
+  {
+    value: "policy",
+    label: "Policy",
+  },
 ];
 
 export const THIRDPARTY_TYPE_OPTIONS = [
@@ -75,7 +79,7 @@ export const THIRDPARTY_TYPE_OPTIONS = [
   {
     value: "policyholder",
     label: "Policy Holder",
-  },
+  }
 ];
 
 export const THIRDPARTY_TYPE_OPTIONS_BILL = [
@@ -91,6 +95,10 @@ export const THIRDPARTY_TYPE_OPTIONS_BILL = [
     value: "payer",
     label: "Payer",
   },
+  {
+    value: "user",
+    label: "User",
+  }
 ];
 
 export const INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_CONTRIBUTION_KEY = "invoice.SubjectAndThirdpartyPicker";
