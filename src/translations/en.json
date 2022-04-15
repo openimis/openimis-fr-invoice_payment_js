@@ -280,18 +280,18 @@
     "payerName": "Payer Name",
     "create": {
       "label": "Create new Payment",
-      "mutationLabel": "Create Invoice Payment {paymentInvoiceLabel} for {code}"
+      "mutationLabel": "Create Payment {paymentInvoiceLabel} for {code}"
     },
     "update": {
       "label": "Update Payment",
-      "mutationLabel":"Update Invoice Payment {paymentInvoiceLabel} of {code}"
+      "mutationLabel":"Update Payment {paymentInvoiceLabel} of {code}"
     },
     "delete": {
       "confirm": {
         "title": "Delete {paymentInvoiceLabel}?",
         "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
       },
-      "mutationLabel": "Delete Payment Invoice {paymentInvoiceLabel} of {code}"
+      "mutationLabel": "Delete Payment {paymentInvoiceLabel} of {code}"
     }
   },
   "detailPaymentInvoice": {
