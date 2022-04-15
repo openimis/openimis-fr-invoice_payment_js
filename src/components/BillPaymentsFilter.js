@@ -5,7 +5,7 @@ import { Grid } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { CONTAINS_LOOKUP, DEFUALT_DEBOUNCE_TIME, STARTS_WITH_LOOKUP } from "../constants";
 import _debounce from "lodash/debounce";
-import InvoicePaymentStatusPicker from "../pickers/InvoicePaymentStatusPicker";
+import PaymentInvoiceStatusPicker from "../pickers/PaymentInvoiceStatusPicker";
 
 const styles = (theme) => ({
     form: {
@@ -54,67 +54,58 @@ const styles = (theme) => ({
     return (
       <Grid container className={classes.form}>
         <Grid item xs={2} className={classes.item}>
-          <InvoicePaymentStatusPicker
-            label="invoicePayment.status.label"
+          <PaymentInvoiceStatusPicker
+            label="paymentInvoice.reconciliationStatus.label"
             withNull
-            nullLabel={formatMessage(intl, "bill", "any")}
-            value={filterValue("status")}
+            nullLabel={formatMessage(intl, "invoice", "any")}
+            value={filterValue("reconciliationStatus")}
             onChange={(value) =>
               onChangeFilters([
                 {
-                  id: "status",
+                  id: "reconciliationStatus",
                   value: value,
-                  filter: `status: "${value}"`,
+                  filter: `reconciliationStatus: "${value}"`,
                 },
               ])
             }
           />
-        </Grid>  
+        </Grid> 
         <Grid item xs={2} className={classes.item}>
           <TextInput
-            module="bill"
-            label="billPayment.codeExt"
+            module="invoice"
+            label="paymentInvoice.codeExt"
             value={filterValue("codeExt")}
             onChange={onChangeStringFilter("codeExt", CONTAINS_LOOKUP)}
           />
         </Grid>
         <Grid item xs={2} className={classes.item}>
           <TextInput
-            module="bill"
-            label="billPayment.label"
+            module="invoice"
+            label="paymentInvoice.label"
             value={filterValue("label")}
             onChange={onChangeStringFilter("label", STARTS_WITH_LOOKUP)}
           />
         </Grid>
         <Grid item xs={2} className={classes.item}>
           <TextInput
-            module="bill"
-            label="billPayment.codeTp"
+            module="invoice"
+            label="paymentInvoice.codeTp"
             value={filterValue("codeTp")}
             onChange={onChangeStringFilter("codeTp", CONTAINS_LOOKUP)}
           />
         </Grid>
         <Grid item xs={2} className={classes.item}>
           <TextInput
-            module="bill"
-            label="billPayment.codeReceipt"
+            module="invoice"
+            label="paymentInvoice.codeReceipt"
             value={filterValue("codeReceipt")}
             onChange={onChangeStringFilter("codeReceipt", CONTAINS_LOOKUP)}
           />
         </Grid>
         <Grid item xs={2} className={classes.item}>
           <NumberInput
-            module="bill"
-            label="billPayment.amountPayed"
-            min={0}
-            value={filterValue("amountPayed")}
-            onChange={onChangeFilter("amountPayed")}
-          />
-        </Grid>
-        <Grid item xs={2} className={classes.item}>
-          <NumberInput
-            module="bill"
-            label="billPayment.fees"
+            module="invoice"
+            label="paymentInvoice.fees"
             min={0}
             value={filterValue("fees")}
             onChange={onChangeFilter("fees")}
@@ -122,8 +113,8 @@ const styles = (theme) => ({
         </Grid>
         <Grid item xs={2} className={classes.item}>
           <NumberInput
-            module="bill"
-            label="billPayment.amountReceived"
+            module="invoice"
+            label="paymentInvoice.amountReceived"
             min={0}
             value={filterValue("amountReceived")}
             onChange={onChangeFilter("amountReceived")}
@@ -132,18 +123,26 @@ const styles = (theme) => ({
         <Grid item xs={2} className={classes.item}>
           <PublishedComponent
             pubRef="core.DatePicker"
-            module="bill"
-            label="billPayment.datePayment"
+            module="invoice"
+            label="paymentInvoice.datePayment"
             value={filterValue("datePayment")}
             onChange={onChangeStringFilter("datePayment")}
           />
       </Grid>
         <Grid item xs={2} className={classes.item}>
           <TextInput
-            module="bill"
-            label="billPayment.paymentOrigin"
+            module="invoice"
+            label="paymentInvoice.paymentOrigin"
             value={filterValue("paymentOrigin")}
             onChange={onChangeStringFilter("paymentOrigin", CONTAINS_LOOKUP)}
+          />
+        </Grid>
+        <Grid item xs={2} className={classes.item}>
+          <TextInput
+            module="invoice"
+            label="paymentInvoice.payerRef"
+            value={filterValue("payerRef")}
+            onChange={onChangeStringFilter("payerRef", CONTAINS_LOOKUP)}
           />
         </Grid>
       </Grid>
