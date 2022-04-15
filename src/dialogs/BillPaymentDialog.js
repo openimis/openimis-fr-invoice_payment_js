@@ -35,7 +35,7 @@ const BillPaymentDialog = ({
   billPayment = null,
   disabled,
   createPaymentInvoiceWithDetail,
-  updateInvoicePayment,
+  updatePaymentInvoice,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [payment, setPayment] = useState({ billId: bill.id, ...(billPayment ?? EMPTY_PAYMENT_INVOICE) });

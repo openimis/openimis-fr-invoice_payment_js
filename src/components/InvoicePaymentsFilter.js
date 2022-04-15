@@ -5,7 +5,7 @@ import { Grid } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { CONTAINS_LOOKUP, DEFUALT_DEBOUNCE_TIME, STARTS_WITH_LOOKUP } from "../constants";
 import _debounce from "lodash/debounce";
-import InvoicePaymentStatusPicker from "../pickers/InvoicePaymentStatusPicker";
+import PaymentInvoiceStatusPicker from "../pickers/PaymentInvoiceStatusPicker";
 import { defaultFilterStyles } from "../util/styles";
 
 const InvoicePaymentsFilter = ({ intl, classes, filters, onChangeFilters }) => {
@@ -46,18 +46,26 @@ const InvoicePaymentsFilter = ({ intl, classes, filters, onChangeFilters }) => {
   return (
     <Grid container className={classes.form}>
       <Grid item xs={2} className={classes.item}>
-        <InvoicePaymentStatusPicker
-          label="invoicePayment.status.label"
-          withNull
-          nullLabel={formatMessage(intl, "invoice", "any")}
-          value={filterValue("status")}
-          onChange={onChangeStringFilter("status")}
-        />
-      </Grid>
+          <PaymentInvoiceStatusPicker
+            label="paymentInvoice.reconciliationStatus.label"
+            withNull
+            nullLabel={formatMessage(intl, "invoice", "any")}
+            value={filterValue("reconciliationStatus")}
+            onChange={(value) =>
+              onChangeFilters([
+                {
+                  id: "reconciliationStatus",
+                  value: value,
+                  filter: `reconciliationStatus: "${value}"`,
+                },
+              ])
+            }
+          />
+        </Grid> 
       <Grid item xs={2} className={classes.item}>
         <TextInput
           module="invoice"
-          label="invoicePayment.codeExt"
+          label="paymentInvoice.codeExt"
           value={filterValue("codeExt")}
           onChange={onChangeStringFilter("codeExt", CONTAINS_LOOKUP)}
         />
@@ -65,7 +73,7 @@ const InvoicePaymentsFilter = ({ intl, classes, filters, onChangeFilters }) => {
       <Grid item xs={2} className={classes.item}>
         <TextInput
           module="invoice"
-          label="invoicePayment.label"
+          label="paymentInvoice.label"
           value={filterValue("label")}
           onChange={onChangeStringFilter("label", STARTS_WITH_LOOKUP)}
         />
@@ -73,7 +81,7 @@ const InvoicePaymentsFilter = ({ intl, classes, filters, onChangeFilters }) => {
       <Grid item xs={2} className={classes.item}>
         <TextInput
           module="invoice"
-          label="invoicePayment.codeTp"
+          label="paymentInvoice.codeTp"
           value={filterValue("codeTp")}
           onChange={onChangeStringFilter("codeTp", CONTAINS_LOOKUP)}
         />
@@ -81,7 +89,7 @@ const InvoicePaymentsFilter = ({ intl, classes, filters, onChangeFilters }) => {
       <Grid item xs={2} className={classes.item}>
         <TextInput
           module="invoice"
-          label="invoicePayment.codeReceipt"
+          label="paymentInvoice.codeReceipt"
           value={filterValue("codeReceipt")}
           onChange={onChangeStringFilter("codeReceipt", CONTAINS_LOOKUP)}
         />
@@ -89,16 +97,7 @@ const InvoicePaymentsFilter = ({ intl, classes, filters, onChangeFilters }) => {
       <Grid item xs={2} className={classes.item}>
         <NumberInput
           module="invoice"
-          label="invoicePayment.amountPayed"
-          min={0}
-          value={filterValue("amountPayed")}
-          onChange={onChangeFilter("amountPayed")}
-        />
-      </Grid>
-      <Grid item xs={2} className={classes.item}>
-        <NumberInput
-          module="invoice"
-          label="invoicePayment.fees"
+          label="paymentInvoice.fees"
           min={0}
           value={filterValue("fees")}
           onChange={onChangeFilter("fees")}
@@ -107,7 +106,7 @@ const InvoicePaymentsFilter = ({ intl, classes, filters, onChangeFilters }) => {
       <Grid item xs={2} className={classes.item}>
         <NumberInput
           module="invoice"
-          label="invoicePayment.amountReceived"
+          label="paymentInvoice.amountReceived"
           min={0}
           value={filterValue("amountReceived")}
           onChange={onChangeFilter("amountReceived")}
@@ -117,7 +116,7 @@ const InvoicePaymentsFilter = ({ intl, classes, filters, onChangeFilters }) => {
         <PublishedComponent
           pubRef="core.DatePicker"
           module="invoice"
-          label="invoicePayment.datePayment"
+          label="paymentInvoice.datePayment"
           value={filterValue("datePayment")}
           onChange={onChangeStringFilter("datePayment")}
         />
@@ -125,9 +124,17 @@ const InvoicePaymentsFilter = ({ intl, classes, filters, onChangeFilters }) => {
       <Grid item xs={2} className={classes.item}>
         <TextInput
           module="invoice"
-          label="invoicePayment.paymentOrigin"
+          label="paymentInvoice.paymentOrigin"
           value={filterValue("paymentOrigin")}
           onChange={onChangeStringFilter("paymentOrigin", CONTAINS_LOOKUP)}
+        />
+      </Grid>
+      <Grid item xs={2} className={classes.item}>
+        <TextInput
+          module="invoice"
+          label="paymentInvoice.payerRef"
+          value={filterValue("payerRef")}
+          onChange={onChangeStringFilter("payerRef", CONTAINS_LOOKUP)}
         />
       </Grid>
     </Grid>

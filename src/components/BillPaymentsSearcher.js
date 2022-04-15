@@ -60,7 +60,7 @@ const BillPaymentsSearcher = ({
     if (
       prevSubmittingMutationRef.current &&
       !submittingMutation &&
-      [ACTION_TYPE.CREATE_BILL_PAYMENT, ACTION_TYPE.UPDATE_BILL_PAYMENT].includes(mutation?.actionType)
+      [ACTION_TYPE.CREATE_PAYMENT_INVOICE_WITH_DETAIL, ACTION_TYPE.UPDATE_BILL_PAYMENT].includes(mutation?.actionType)
     ) {
       refetch();
     }
@@ -134,6 +134,7 @@ const BillPaymentsSearcher = ({
           ? formatDateFromISO(modulesManager, intl, paymentInvoice.datePayment)
           : EMPTY_STRING,
       (paymentInvoice) => paymentInvoice.paymentOrigin,
+      (paymentInvoice) => paymentInvoice.payerRef,
     ];
 
     if (rights.includes(RIGHT_BILL_PAYMENT_DELETE)) {
