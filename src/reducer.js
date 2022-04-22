@@ -33,6 +33,10 @@ export const ACTION_TYPE = {
   DELETE_BILL_PAYMENT: "BILL_DELETE_BILL_PAYMENT",
   SEARCH_BILL_EVENTS: "BILL_BILL_EVENTS",
   CREATE_BILL_EVENT_MESSAGE: "BILL_CREATE_BILL_EVENT_MESSAGE",
+  SEARCH_PAYMENT_INVOICE: "PAYMENTINVOICE__PAYMENT_INVOICE",
+  SEARCH_DETAIL_PAYMENT_INVOICE: "PAYMENTINVOICE__DETAIL_PAYMENT_INVOICE",
+  CREATE_PAYMENT_INVOICE_WITH_DETAIL: "PAYMENTINVOICE_CREATE_PAYMENT_INVOICE_WITH_DETAIL",
+  DELETE_PAYMENT_INVOICE: "PAYMENTINVOICE_DELETE_PAYMENT_INVOICE",
 };
 
 function reducer(
@@ -99,6 +103,20 @@ function reducer(
     billEvents: [],
     billEventsPageInfo: {},
     billEventsTotalCount: 0,
+
+    fetchingPaymentInvoices: false,
+    errorPaymentInvoices: null,
+    fetchedPaymentInvoices: false,
+    paymentInvoices: [],
+    paymentInvoicesPageInfo: {},
+    paymentInvoicesTotalCount: 0,
+
+    fetchingDetailPaymentInvoices: false,
+    errorDetailPaymentInvoices: null,
+    fetchedDetailPaymentInvoices: false,
+    detailPaymentInvoices: [],
+    detailPaymentInvoicesPageInfo: {},
+    detailPaymentInvoicesTotalCount: 0,
   },
   action,
 ) {
@@ -393,6 +411,69 @@ function reducer(
         fetchingBillEvents: false,
         errorBillEvents: formatServerError(action.payload),
       };
+    
+    case REQUEST(ACTION_TYPE.SEARCH_PAYMENT_INVOICE):
+      return {
+        ...state,
+        fetchingPaymentInvoices: true,
+        fetchedPaymentInvoices: false,
+        paymentInvoices: [],
+        paymentInvoicesPageInfo: {},
+        paymentInvoicesTotalCount: 0,
+        errorPaymentInvoices: null,
+      };
+    case SUCCESS(ACTION_TYPE.SEARCH_PAYMENT_INVOICE):
+      return {
+        ...state,
+        fetchingPaymentInvoices: false,
+        fetchedPaymentInvoices: true,
+        paymentInvoices: parseData(action.payload.data.paymentInvoice)?.map((paymentInvoice) => ({
+          ...paymentInvoice,
+          id: decodeId(paymentInvoice.id),
+          reconciliationStatus: getEnumValue(paymentInvoice?.reconciliationStatus),
+        })),
+        paymentInvoicesPageInfo: pageInfo(action.payload.data.paymentInvoice),
+        paymentInvoicesTotalCount: action.payload.data.paymentInvoice?.totalCount,
+        errorPaymentInvoices: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.SEARCH_PAYMENT_INVOICE):
+      return {
+        ...state,
+        fetchingPaymentInvoices: false,
+        errorPaymentInvoices: formatServerError(action.payload),
+      };
+
+    case REQUEST(ACTION_TYPE.SEARCH_DETAIL_PAYMENT_INVOICE):
+      return {
+        ...state,
+        fetchingDetailPaymentInvoices: true,
+        fetchedDetailPaymentInvoices: false,
+        detailPaymentInvoices: [],
+        detailPaymentInvoicesPageInfo: {},
+        detailPaymentInvoicesTotalCount: 0,
+        errorPaymentInvoices: null,
+      };
+    case SUCCESS(ACTION_TYPE.SEARCH_DETAIL_PAYMENT_INVOICE):
+      return {
+        ...state,
+        fetchingDetailPaymentInvoices: false,
+        fetchedDetailPaymentInvoices: true,
+        detailPaymentInvoices: parseData(action.payload.data.detailPaymentInvoice)?.map((detailPaymentInvoice) => ({
+          ...detailPaymentInvoice,
+          id: decodeId(detailPaymentInvoice.id),
+          reconciliationStatus: getEnumValue(detailPaymentInvoice?.reconciliationStatus),
+        })),
+        detailPaymentInvoicesPageInfo: pageInfo(action.payload.data.detailPaymentInvoice),
+        detailPaymentInvoicesTotalCount: action.payload.data.detailPaymentInvoice?.totalCount,
+        errorDetailPaymentInvoices: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.SEARCH_DETAIL_PAYMENT_INVOICE):
+      return {
+        ...state,
+        fetchingDetailPaymentInvoices: false,
+        errorDetailPaymentInvoices: formatServerError(action.payload),
+      };
+
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);
     case ERROR(ACTION_TYPE.MUTATION):
@@ -417,6 +498,10 @@ function reducer(
       return dispatchMutationResp(state, "deleteBillPayment", action);
     case SUCCESS(ACTION_TYPE.CREATE_BILL_EVENT_MESSAGE):
       return dispatchMutationResp(state, "createBillEventType", action);
+    case SUCCESS(ACTION_TYPE.CREATE_PAYMENT_INVOICE_WITH_DETAIL):
+      return dispatchMutationResp(state, "createPaymentWithDetailInvoice", action);
+    case SUCCESS(ACTION_TYPE.DELETE_PAYMENT_INVOICE):
+      return dispatchMutationResp(state, "deletePaymentInvoice", action);
     default:
       return state;
   }

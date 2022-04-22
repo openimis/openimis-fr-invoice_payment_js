@@ -135,9 +135,28 @@ export const EMPTY_PAYMENT = {
   datePayment: null,
   paymentOrigin: null,
 };
+export const EMPTY_PAYMENT_INVOICE = {
+  status: null,
+  codeExt: null,
+  codeTp: null,
+  codeReceipt: null,
+  label: null,
+  fees: null,
+  amountReceived: null,
+  datePayment: null,
+  paymentOrigin: null,
+  payerRef: null,
+  payerName: null,
+};
 export const PAYMENT_STATUS = {
   REJECTED: "0",
   ACCEPTED: "1",
+  REFUNDED: "2",
+  CANCELLED: "3",
+};
+export const PAYMENT_MAIN_STATUS = {
+  NOT_RECONCILIATED: "0",
+  RECONCILIATED: "1",
   REFUNDED: "2",
   CANCELLED: "3",
 };

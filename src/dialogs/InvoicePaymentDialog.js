@@ -17,11 +17,12 @@ import {
 } from "@openimis/fe-core";
 import { Fab, Grid, IconButton, Tooltip } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
-import { createInvoicePayment, updateInvoicePayment } from "../actions";
+import { createPaymentInvoiceWithDetail, updateInvoicePayment } from "../actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { EMPTY_PAYMENT } from "../constants";
+import { EMPTY_PAYMENT_INVOICE } from "../constants";
 import InvoicePaymentStatusPicker from "../pickers/InvoicePaymentStatusPicker";
+import PaymentInvoiceStatusPicker from "../pickers/PaymentInvoiceStatusPicker";
 import { defaultDialogStyles } from "../util/styles";
 
 const InvoicePaymentDialog = ({
@@ -30,34 +31,36 @@ const InvoicePaymentDialog = ({
   invoice,
   invoicePayment = null,
   disabled,
-  createInvoicePayment,
-  updateInvoicePayment,
+  createPaymentInvoiceWithDetail,
+  updatePaymentInvoice,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [payment, setPayment] = useState({ invoiceId: invoice.id, ...(invoicePayment ?? EMPTY_PAYMENT) });
+  const [payment, setPayment] = useState({ invoiceId: invoice.id, ...(invoicePayment ?? EMPTY_PAYMENT_INVOICE) });
   const isNew = !invoicePayment;
 
   const handleOpen = () => setIsOpen(true);
 
   const handleClose = () => {
     setIsOpen(false);
-    setPayment({ invoiceId: payment.invoiceId, ...(isNew ? EMPTY_PAYMENT : invoicePayment) });
+    setPayment({ invoiceId: payment.invoiceId, ...(isNew ? EMPTY_PAYMENT_INVOICE : invoicePayment) });
   };
 
   const handleSave = () => {
     isNew
-      ? createInvoicePayment(
+      ? createPaymentInvoiceWithDetail(
           payment,
-          formatMessageWithValues(intl, "invoice", "invoicePayment.create.mutationLabel", {
-            invoicePaymentLabel: payment.label,
-            invoiceCode: invoice?.code,
+          payment.invoiceId, 
+          "invoice",
+          formatMessageWithValues(intl, "invoice", "paymentInvoice.create.mutationLabel", {
+            paymentInvoiceLabel: payment.label,
+            code: invoice?.code,
           }),
         )
       : updateInvoicePayment(
           payment,
-          formatMessageWithValues(intl, "invoice", "invoicePayment.update.mutationLabel", {
-            invoicePaymentLabel: payment.label,
-            invoiceCode: invoice?.code,
+          formatMessageWithValues(intl, "invoice", "paymentInvoice.update.mutationLabel", {
+            paymentInvoiceLabel: payment.label,
+            code: invoice?.code,
           }),
         );
     handleClose();
@@ -91,8 +94,17 @@ const InvoicePaymentDialog = ({
         <DialogContent>
           <Grid container direction="column" className={classes.item}>
             <Grid item className={classes.item}>
+              <PaymentInvoiceStatusPicker
+                label="paymentInvoice.reconciliationStatus.label"
+                withNull
+                value={payment?.reconciliationStatus}
+                onChange={onAttributeChange("reconciliationStatus")}
+                required
+              />
+            </Grid>
+            <Grid item className={classes.item}>
               <InvoicePaymentStatusPicker
-                label="invoicePayment.status.label"
+                label="paymentInvoice.status.label"
                 withNull
                 value={payment?.status}
                 onChange={onAttributeChange("status")}
@@ -102,7 +114,25 @@ const InvoicePaymentDialog = ({
             <Grid item className={classes.item}>
               <TextInput
                 module="invoice"
-                label="invoicePayment.codeExt"
+                label="paymentInvoice.payerRef"
+                value={payment?.payerRef}
+                onChange={onAttributeChange("payerRef")}
+                required
+              />
+            </Grid>
+            <Grid item className={classes.item}>
+              <TextInput
+                module="invoice"
+                label="paymentInvoice.payerName"
+                value={payment?.payerName}
+                onChange={onAttributeChange("payerName")}
+                required
+              />
+            </Grid>
+            <Grid item className={classes.item}>
+              <TextInput
+                module="invoice"
+                label="paymentInvoice.codeExt"
                 value={payment?.codeExt}
                 onChange={onAttributeChange("codeExt")}
                 required
@@ -111,7 +141,7 @@ const InvoicePaymentDialog = ({
             <Grid item className={classes.item}>
               <TextInput
                 module="invoice"
-                label="invoicePayment.label"
+                label="paymentInvoice.label"
                 value={payment?.label}
                 onChange={onAttributeChange("label")}
                 required
@@ -120,7 +150,7 @@ const InvoicePaymentDialog = ({
             <Grid item className={classes.item}>
               <TextInput
                 module="invoice"
-                label="invoicePayment.codeTp"
+                label="paymentInvoice.codeTp"
                 value={payment?.codeTp}
                 onChange={onAttributeChange("codeTp")}
                 required
@@ -129,7 +159,7 @@ const InvoicePaymentDialog = ({
             <Grid item className={classes.item}>
               <TextInput
                 module="invoice"
-                label="invoicePayment.codeReceipt"
+                label="paymentInvoice.codeReceipt"
                 value={payment?.codeReceipt}
                 onChange={onAttributeChange("codeReceipt")}
                 required
@@ -138,17 +168,7 @@ const InvoicePaymentDialog = ({
             <Grid item className={classes.item}>
               <NumberInput
                 module="invoice"
-                label="invoicePayment.amountPayed"
-                min={0}
-                value={payment?.amountPayed}
-                onChange={onAttributeChange("amountPayed")}
-                required
-              />
-            </Grid>
-            <Grid item className={classes.item}>
-              <NumberInput
-                module="invoice"
-                label="invoicePayment.fees"
+                label="paymentInvoice.fees"
                 min={0}
                 value={payment?.fees}
                 onChange={onAttributeChange("fees")}
@@ -158,7 +178,7 @@ const InvoicePaymentDialog = ({
             <Grid item className={classes.item}>
               <NumberInput
                 module="invoice"
-                label="invoicePayment.amountReceived"
+                label="paymentInvoice.amountReceived"
                 min={0}
                 value={payment?.amountReceived}
                 onChange={onAttributeChange("amountReceived")}
@@ -169,7 +189,7 @@ const InvoicePaymentDialog = ({
               <PublishedComponent
                 pubRef="core.DatePicker"
                 module="invoice"
-                label="invoicePayment.datePayment"
+                label="paymentInvoice.datePayment"
                 value={payment?.datePayment}
                 onChange={onAttributeChange("datePayment")}
                 required
@@ -178,7 +198,7 @@ const InvoicePaymentDialog = ({
             <Grid item className={classes.item}>
               <TextInput
                 module="invoice"
-                label="invoicePayment.paymentOrigin"
+                label="paymentInvoice.paymentOrigin"
                 value={payment?.paymentOrigin}
                 onChange={onAttributeChange("paymentOrigin")}
                 required
@@ -199,7 +219,7 @@ const InvoicePaymentDialog = ({
   );
 };
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({ createInvoicePayment, updateInvoicePayment }, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ createPaymentInvoiceWithDetail, updateInvoicePayment }, dispatch);
 
 export default injectIntl(
   withTheme(withStyles(defaultDialogStyles)(connect(null, mapDispatchToProps)(InvoicePaymentDialog))),

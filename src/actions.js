@@ -128,6 +128,30 @@ const BILL_PAYMENT_FULL_PROJECTION = [
   "paymentOrigin",
 ];
 
+// new payment design
+const PAYMENT_INVOICE_FULL_PROJECTION = [
+  "id",
+  "reconciliationStatus",
+  "codeExt",
+  "codeTp",
+  "codeReceipt",
+  "label",
+  "fees",
+  "amountReceived",
+  "datePayment",
+  "paymentOrigin",
+  "payerRef"
+];
+
+const DETAIL_PAYMENT_INVOICE_FULL_PROJECTION = [
+  "id",
+  "status",
+  "fees",
+  "amount",
+  "reconciliationId",
+  "reconciliationDate",
+];
+
 const INVOICE_EVENT_FULL_PROJECTION = ["eventType", "message"];
 
 const formatInvoicePaymentGQL = (payment) =>
@@ -174,6 +198,24 @@ const formatBillEventMessageGQL = (eventMessage) =>
     ${!!eventMessage.billId ? `billId: "${eventMessage.billId}"` : ""}
     ${!!eventMessage.eventType ? `eventType: ${eventMessage.eventType}` : ""}
     ${!!eventMessage.message ? `message: "${eventMessage.message}"` : ""}
+  `;
+
+const formatPaymentInvoiceGQL = (payment, subjectId, subjectType) =>
+  `
+    ${!!payment.id ? `id: "${payment.id}"` : ""}
+    ${!!subjectId ? `subjectId: "${subjectId}"` : ""}
+    ${!!subjectType ? `subjectType: "${subjectType}"` : ""}
+    ${!!payment.status ? `status: ${payment.status}` : ""}
+    ${!!payment.reconciliationStatus ? `reconciliationStatus: ${payment.reconciliationStatus}` : ""}
+    ${!!payment.codeExt ? `codeExt: "${payment.codeExt}"` : ""}
+    ${!!payment.label ? `label: "${payment.label}"` : ""}
+    ${!!payment.codeTp ? `codeTp: "${payment.codeTp}"` : ""}
+    ${!!payment.codeReceipt ? `codeReceipt: "${payment.codeReceipt}"` : ""}
+    ${!!payment.fees ? `fees: "${payment.fees}"` : ""}
+    ${!!payment.amountReceived ? `amountReceived: "${payment.amountReceived}"` : ""}
+    ${!!payment.datePayment ? `datePayment: "${payment.datePayment}"` : ""}
+    ${!!payment.paymentOrigin ? `paymentOrigin: "${payment.paymentOrigin}"` : ""}
+    ${!!payment.payerRef ? `payerRef: "${payment.payerRef}"` : ""}
   `;
 
 export function fetchInvoices(params) {
@@ -390,6 +432,52 @@ export function createBillEventType(billEvent, clientMutationLabel) {
     [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.CREATE_BILL_EVENT_MESSAGE), ERROR(ACTION_TYPE.MUTATION)],
     {
       actionType: ACTION_TYPE.CREATE_BILL_EVENT_MESSAGE,
+      clientMutationId: mutation.clientMutationId,
+      clientMutationLabel,
+      requestedDateTime,
+    },
+  );
+}
+
+//payment new design
+export function fetchPaymentInvoices(params) {
+  const payload = formatPageQueryWithCount("paymentInvoice", params, PAYMENT_INVOICE_FULL_PROJECTION);
+  return graphql(payload, ACTION_TYPE.SEARCH_PAYMENT_INVOICE);
+}
+
+export function fetchDetailPaymentInvoices(params) {
+  const payload = formatPageQueryWithCount("detailPaymentInvoice", params, DETAIL_PAYMENT_INVOICE_FULL_PROJECTION);
+  return graphql(payload, ACTION_TYPE.SEARCH_DETAIL_PAYMENT_INVOICE);
+}
+
+export function createPaymentInvoiceWithDetail(paymentInvoice, subjectId, subjectType, clientMutationLabel) {
+  const mutation = formatMutation(
+    "createPaymentWithDetailInvoice", 
+    formatPaymentInvoiceGQL(paymentInvoice, subjectId, subjectType), 
+    clientMutationLabel
+  );
+  const requestedDateTime = new Date();
+  return graphql(
+    mutation.payload,
+    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.CREATE_PAYMENT_INVOICE_WITH_DETAIL), ERROR(ACTION_TYPE.MUTATION)],
+    {
+      actionType: ACTION_TYPE.CREATE_PAYMENT_INVOICE_WITH_DETAIL,
+      clientMutationId: mutation.clientMutationId,
+      clientMutationLabel,
+      requestedDateTime,
+    },
+  );
+}
+
+export function deletePaymentInvoice(paymentInvoice, clientMutationLabel) {
+  const paymentInvoiceUuids = `uuids: ["${paymentInvoice?.id}"]`;
+  const mutation = formatMutation("deletePaymentInvoice", paymentInvoiceUuids, clientMutationLabel);
+  const requestedDateTime = new Date();
+  return graphql(
+    mutation.payload,
+    [REQUEST(ACTION_TYPE.MUTATION), SUCCESS(ACTION_TYPE.DELETE_PAYMENT_INVOICE), ERROR(ACTION_TYPE.MUTATION)],
+    {
+      actionType: ACTION_TYPE.DELETE_PAYMENT_INVOICE,
       clientMutationId: mutation.clientMutationId,
       clientMutationLabel,
       requestedDateTime,
