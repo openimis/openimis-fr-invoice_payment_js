@@ -1,0 +1,310 @@
+{
+  "mainMenu": "Legal and Finance",
+  "menu": {
+    "invoices": "Invoices",
+    "bills": "Bills"
+  },
+  "emptyLabel": " ",
+  "any": "Any",
+  "editButtonTooltip": "Edit",
+  "deleteButtonTooltip": "Delete",
+  "dialog": {
+    "create": "Create",
+    "update": "Save",
+    "cancel": "Cancel"
+  },
+  "invoice": {
+    "pageTitle": "Invoice {label}",
+    "headPanelTitle": "General Information",
+    "subject": "Subject",
+    "thirdparty": "Recipient",
+    "code": "Code",
+    "codeTp": "Code Recipient",
+    "codeExt": "Code External System",
+    "dateDue": "Date Due",
+    "dateInvoice": "Date Invoice",
+    "dateValidFrom": "From",
+    "dateValidTo": "To",
+    "datePayed": "Date Payed",
+    "amountDiscount": "Discount",
+    "amountNet": "Net",
+    "taxAnalysis": "Tax",
+    "amountTotal": "Amount Total",
+    "status": {
+      "label": "Status",
+      "DRAFT": "Draft",
+      "VALIDATED": "Validated",
+      "PAYED": "Payed",
+      "CANCELLED": "Cancelled",
+      "DELETED": "Deleted",
+      "SUSPENDED": "Suspended"
+    },
+    "currencyTpCode": "Currency Recipient",
+    "currencyCode": "Currency",
+    "note": "Note",
+    "terms": "Terms",
+    "paymentReference": "Payment Reference",
+    "delete": {
+      "confirm": {
+        "title": "Delete {code}?",
+        "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
+      },
+      "mutationLabel": "Delete Invoice {code}"
+    }
+  },
+  "invoices": {
+    "pageTitle": "Invoices",
+    "searcherResultsTitle": "{invoicesTotalCount} Invoices Found"
+  },
+  "invoiceLineItems": {
+    "label": "Line Items",
+    "searcherResultsTitle": "{invoiceLineItemsTotalCount} Line Items Found"
+  },
+  "invoiceLineItem": {
+    "code": "Code",
+    "description": "Description",
+    "ledgerAccount": "Ledger Account",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "discount": "Discount",
+    "deduction": "Deduction",
+    "amountTotal": "Amount Total",
+    "amountNet": "Amount Net",
+    "amountNetTooltip": "Tax: {value}"
+  },
+  "invoicePayments": {
+    "label": "Payments",
+    "searcherResultsTitle": "{invoicePaymentsTotalCount} Payments Found"
+  },
+  "invoicePayment": {
+    "status": {
+      "label": "Status",
+      "REJECTED": "Rejected",
+      "ACCEPTED": "Accepted",
+      "REFUNDED": "Refunded",
+      "CANCELLED": "Cancelled"
+    },
+    "codeExt":"Code",
+    "label": "Label",
+    "codeTp": "Code Thirdparty",
+    "codeReceipt": "Receipt Number",
+    "amountPayed": "Amount Payed",
+    "fees": "Fees",
+    "amountReceived": "Amount Received",
+    "datePayment": "Payment Date",
+    "paymentOrigin": "Payment Origin",
+    "create": {
+      "label": "Create new Payment",
+      "mutationLabel": "Create Invoice Payment {invoicePaymentLabel} for {invoiceCode}"
+    },
+    "update": {
+      "label": "Update Payment",
+      "mutationLabel":"Update Invoice Payment {invoicePaymentLabel} of {invoiceCode}"
+    },
+    "delete": {
+      "confirm": {
+        "title": "Delete {invoicePaymentLabel}?",
+        "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
+      },
+      "mutationLabel": "Delete Invoice Payment {invoicePaymentLabel} of {invoiceCode}"
+    }
+  },
+  "invoiceEvents": {
+    "label": "Events",
+    "searcherResultsTitle":"{invoiceEventsTotalCount} Events Found"
+  },
+  "invoiceEvent": {
+    "eventType": {
+      "label": "Type",
+      "MESSAGE": "Message",
+      "STATUS": "Status",
+      "WARNING": "Warning",
+      "PAYMENT": "Payment",
+      "PAYMENT_ERROR": "Payment Error"
+    },
+    "message": "Message"
+  },
+  "invoiceEventMessage": {
+    "create": {
+      "label": "Create new Comment",
+      "mutationLabel": "Create Invoice Event Message for {invoiceCode}"
+    }
+  },
+  "bill": {
+    "pageTitle": "Bill {label}",
+    "headPanelTitle": "General Information",
+    "subject": "Subject",
+    "thirdparty": "Sender",
+    "code": "Code",
+    "codeTp": "Code Sender",
+    "codeExt": "Code External System",
+    "dateDue": "Date Due",
+    "dateBill": "Date Bill",
+    "dateValidFrom": "From",
+    "dateValidTo": "To",
+    "datePayed": "Date Payed",
+    "amountDiscount": "Discount",
+    "amountNet": "Net",
+    "taxAnalysis": "Tax",
+    "amountTotal": "Amount Total",
+    "status": {
+      "label": "Status",
+      "DRAFT": "Draft",
+      "VALIDATED": "Validated",
+      "PAYED": "Payed",
+      "CANCELLED": "Cancelled",
+      "DELETED": "Deleted",
+      "SUSPENDED": "Suspended"
+    },
+    "currencyTpCode": "Currency Thirdparty",
+    "currencyCode": "Currency",
+    "note": "Note",
+    "terms": "Terms",
+    "paymentReference": "Payment Reference",
+    "delete": {
+      "confirm": {
+        "title": "Delete {code}?",
+        "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
+      },
+      "mutationLabel": "Delete Bill {code}"
+    }
+  },
+  "bills": {
+    "pageTitle": "Bills",
+    "searcherResultsTitle": "{billsTotalCount} Bills Found"
+  },
+  "billItems": {
+    "label": "Line Items",
+    "searcher": {
+      "resultsTitle": "{billLineItemsTotalCount} Line Items Found"
+    }
+  },
+  "billItem": {
+    "code": "Code",
+    "description": "Description",
+    "ledgerAccount": "Ledger Account",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "discount": "Discount",
+    "deduction": "Deduction",
+    "amountTotal": "Amount Total",
+    "amountNet": "Amount Net",
+    "amountNetTooltip": "Tax: {value}"
+  },
+  "billPayments": {
+    "label": "Payments",
+    "searcherResultsTitle": "{billPaymentsTotalCount} Payments Found"
+  },
+  "billPayment": {
+    "status": {
+      "label": "Status",
+      "REJECTED": "Rejected",
+      "ACCEPTED": "Accepted",
+      "REFUNDED": "Refunded",
+      "CANCELLED": "Cancelled"
+    },
+    "codeExt":"Code",
+    "label": "Label",
+    "codeTp": "Code Thirdparty",
+    "codeReceipt": "Receipt Number",
+    "amountPayed": "Amount Payed",
+    "fees": "Fees",
+    "amountReceived": "Amount Received",
+    "datePayment": "Payment Date",
+    "paymentOrigin": "Payment Origin",
+    "create": {
+      "label": "Create new Payment",
+      "mutationLabel": "Create Bill Payment {billPaymentLabel} for {billCode}"
+    },
+    "update": {
+      "label": "Update Payment",
+      "mutationLabel":"Update Bill Payment {billPaymentLabel} of {billCode}"
+    },
+    "delete": {
+      "confirm": {
+        "title": "Delete {billPaymentLabel}?",
+        "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
+      },
+      "mutationLabel": "Delete Bill Payment {billPaymentLabel} of {billCode}"
+    }
+  },
+  "billEvents": {
+    "label": "Events",
+    "searcherResultsTitle":"{billEventsTotalCount} Events Found"
+  },
+  "billEvent": {
+    "eventType": {
+      "label": "Type",
+      "MESSAGE": "Message",
+      "STATUS": "Status",
+      "WARNING": "Warning",
+      "PAYMENT": "Payment",
+      "PAYMENT_ERROR": "Payment Error"
+    },
+    "message": "Message"
+  },
+  "billEventMessage": {
+    "create": {
+      "label": "Create new Comment",
+      "mutationLabel": "Create Bill Event Message for {billCode}"
+    }
+  },
+  "paymentInvoices": {
+    "label": "Payments",
+    "searcherResultsTitle": "{paymentInvoicesTotalCount} Payments Found"
+  },
+  "paymentInvoice": {
+    "reconciliationStatus": {
+      "label": "Reconciliation Status",
+      "NOT_RECONCILIATED": "Not reconciliated",
+      "RECONCILIATED": "Reconciliated",
+      "REFUNDED": "Refunded",
+      "CANCELLED": "Cancelled"
+    },
+    "status": {
+      "label": "Status",
+      "REJECTED": "Rejected",
+      "ACCEPTED": "Accepted",
+      "REFUNDED": "Refunded",
+      "CANCELLED": "Cancelled"
+    },
+    "codeExt":"Code",
+    "label": "Label",
+    "codeTp": "Code Thirdparty",
+    "codeReceipt": "Receipt Number",
+    "fees": "Fees",
+    "amountReceived": "Amount Received",
+    "datePayment": "Payment Date",
+    "paymentOrigin": "Payment Origin",
+    "payerRef": "Payer Reference",
+    "payerName": "Payer Name",
+    "create": {
+      "label": "Create new Payment",
+      "mutationLabel": "Create Payment {paymentInvoiceLabel} for {code}"
+    },
+    "update": {
+      "label": "Update Payment",
+      "mutationLabel":"Update Payment {paymentInvoiceLabel} of {code}"
+    },
+    "delete": {
+      "confirm": {
+        "title": "Delete {paymentInvoiceLabel}?",
+        "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
+      },
+      "mutationLabel": "Delete Payment {paymentInvoiceLabel} of {code}"
+    }
+  },
+  "detailPaymentInvoice": {
+    "status": {
+      "label": "Status",
+      "REJECTED": "Rejected",
+      "ACCEPTED": "Accepted",
+      "REFUNDED": "Refunded",
+      "CANCELLED": "Cancelled"
+    },
+    "fees": "Fees",
+    "amount": "Amount",
+    "reconciliationId": "Reconciliation Id",
+    "reconciliationDate": "Reconciliation Date"
+  }
+}
