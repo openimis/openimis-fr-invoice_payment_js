@@ -167,7 +167,8 @@
         "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
       },
       "mutationLabel": "Delete Bill {code}"
-    }
+    },
+    "selection.count": "Selected {count} bill(s)"
   },
   "bills": {
     "pageTitle": "Bills",

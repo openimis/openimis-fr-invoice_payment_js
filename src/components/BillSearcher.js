@@ -47,6 +47,8 @@ const BillSearcher = ({
   bills,
   billsPageInfo,
   billsTotalCount,
+  actions,
+  actionsContributionKey
 }) => {
   const [billToDelete, setBillToDelete] = useState(null);
   const [deletedBillUuids, setDeletedBillUuids] = useState([]);
@@ -200,6 +202,10 @@ const BillSearcher = ({
       defaultFilters={defaultFilters()}
       rowDisabled={isRowDisabled}
       rowLocked={isRowDisabled}
+      actions={actions}
+      actionsContributionKey={actionsContributionKey}
+      withSelection="multiple"
+      selectionMessage={"bill.selection.count"}
     />
   );
 };
