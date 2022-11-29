@@ -79,7 +79,6 @@ const BillSearcher = ({
   }, [errorBillsExport])
 
   useEffect(() => {
-    console.log(billsExport)
     if (billsExport) {
       downloadExport(billsExport, 'bill_export.csv')();
     }
