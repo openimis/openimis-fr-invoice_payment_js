@@ -24,6 +24,7 @@ export const ACTION_TYPE = {
   SEARCH_INVOICE_EVENTS: "INVOICE_INVOICE_EVENTS",
   CREATE_INVOICE_EVENT_MESSAGE: "INVOICE_CREATE_INVOICE_EVENT_MESSAGE",
   SEARCH_BILLS: "SEARCH_BILLS",
+  BILL_EXPORT: "EXPORT BILLS",
   GET_BILL: "BILL_BILL",
   DELETE_BILL: "BILL_DELETE_BILL",
   SEARCH_BILL_LINE_ITEMS: "BILL_BILL_LINE_ITEMS",
@@ -117,6 +118,12 @@ function reducer(
     detailPaymentInvoices: [],
     detailPaymentInvoicesPageInfo: {},
     detailPaymentInvoicesTotalCount: 0,
+
+    fetchingBillsExport: true,
+    fetchedBillsExport: false,
+    billsExport: null,
+    billsExportPageInfo: {},
+    errorBillsExport: null,
   },
   action,
 ) {
@@ -294,6 +301,30 @@ function reducer(
         ...state,
         fetchingBills: false,
         errorBills: formatServerError(action.payload),
+      };
+    case REQUEST(ACTION_TYPE.BILL_EXPORT):
+        return {
+          ...state,
+          fetchingBillsExport: true,
+          fetchedBillsExport: false,
+          billsExport: null,
+          billsExportPageInfo: {},
+          errorBillsExport: null,
+        };
+    case SUCCESS(ACTION_TYPE.BILL_EXPORT):
+    return {
+        ...state,
+        fetchingBillsExport: false,
+        fetchedBillsExport: true,
+        billsExport: action.payload.data.billExport,
+        billsExportPageInfo: pageInfo(action.payload.data.billExport),
+        errorBillsExport: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.BILL_EXPORT):
+      return {
+        ...state,
+        fetchingBillsExport: false,
+        errorBillsExport: formatServerError(action.payload),
       };
     case REQUEST(ACTION_TYPE.GET_BILL):
       return {

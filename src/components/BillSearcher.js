@@ -10,10 +10,11 @@ import {
   journalize,
   withHistory,
   historyPush,
+  downloadExport
 } from "@openimis/fe-core";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { fetchBills, deleteBill } from "../actions";
+import { fetchBills, deleteBill, fetchBillsExport } from "../actions";
 import {
   DEFAULT_PAGE_SIZE,
   ROWS_PER_PAGE_OPTIONS,
@@ -25,7 +26,10 @@ import {
 import BillFilter from "./BillFilter";
 import InvoiceStatusPicker from "../pickers/InvoiceStatusPicker";
 import { getSubjectAndThirdpartyTypePicker } from "../util/subject-and-thirdparty-picker";
-import { IconButton, Tooltip } from "@material-ui/core";
+import { IconButton, Tooltip, Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,} from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -40,6 +44,7 @@ const BillSearcher = ({
   submittingMutation,
   mutation,
   fetchBills,
+  fetchBillsExport,
   deleteBill,
   fetchingBills,
   fetchedBills,
@@ -47,11 +52,16 @@ const BillSearcher = ({
   bills,
   billsPageInfo,
   billsTotalCount,
+  billsExport,
+  billsExportPageInfo,
+  billsExportTotalCount,
+  errorBillsExport,
   actions,
   actionsContributionKey
 }) => {
   const [billToDelete, setBillToDelete] = useState(null);
   const [deletedBillUuids, setDeletedBillUuids] = useState([]);
+  const [failedExport, setFailedExport] = useState(false)
   const prevSubmittingMutationRef = useRef();
 
   useEffect(() => billToDelete && openConfirmDialog(), [billToDelete]);
@@ -63,6 +73,17 @@ const BillSearcher = ({
     }
     billToDelete && confirmed !== null && setBillToDelete(null);
   }, [confirmed]);
+
+  useEffect(() => {
+    setFailedExport(true)
+  }, [errorBillsExport])
+
+  useEffect(() => {
+    console.log(billsExport)
+    if (billsExport) {
+      downloadExport(billsExport, 'bill_export.csv')();
+    }
+  }, [billsExport])
 
   useEffect(() => {
     prevSubmittingMutationRef.current && !submittingMutation && journalize(mutation);
@@ -178,7 +199,17 @@ const BillSearcher = ({
     },
   });
 
+  const exportFields = () => ({
+    'id': 'ID', 
+    'userCreated.username': "User", 
+    'amount_total': "AmountTotal", 
+    "subjectTypeName": "Subject",
+    'thirdpartyTypeName': "SenderType", 
+    'thirdparty': ""
+  })
+
   return (
+    <div>
     <Searcher
       module="bill"
       FilterPane={BillFilter}
@@ -206,7 +237,37 @@ const BillSearcher = ({
       actionsContributionKey={actionsContributionKey}
       withSelection="multiple"
       selectionMessage={"bill.selection.count"}
+      exportable={true}
+      exportFetch={fetchBillsExport}
+      exportFields={[
+        'id', 'userCreated.username', 'amount_total', 'subjectType', 'subjectId', 'thirdpartyType',
+        'thirdpartyId', 'code', 'status', 'dateBill'
+    ]}
+      exportFieldsColumns={{
+        'id': 'ID', 
+        'userCreated.username': "User", 
+        'amount_total': "AmountTotal", 
+        "subjectType": "Subject Type",
+        "subject": "subject",
+        'thirdpartyType': "SenderType", 
+        'thirdparty': "Sender",
+        'code': 'code',
+        'dateBill': 'Date Bill',
+        'status': 'Status',
+      }}
     />
+
+    {failedExport && (
+      <Dialog fullWidth maxWidth="sm">
+        <DialogTitle>{errorBillsExport}</DialogTitle>
+        <DialogActions>
+        <Button onClick={setFailedExport(false)} variant="contained">
+          {formatMessage(intl, "invoice", "ok")}
+        </Button>
+        </DialogActions>
+      </Dialog>
+    )}
+    </div>
   );
 };
 
@@ -220,6 +281,12 @@ const mapStateToProps = (state) => ({
   confirmed: state.core.confirmed,
   submittingMutation: state.invoice.submittingMutation,
   mutation: state.invoice.mutation,
+  
+  fetchingBillsExport: state.invoice.fetchingBillsExport,
+  fetchedBillsExport: state.invoice.fetchedBillsExport,
+  billsExport: state.invoice.billsExport,
+  billsExportPageInfo: state.invoice.billsExportPageInfo,
+  errorBillsExport: state.invoice.errorBillsExport,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -227,6 +294,8 @@ const mapDispatchToProps = (dispatch) => {
     {
       fetchBills,
       deleteBill,
+      fetchBillsExport,
+      downloadExport,
       coreConfirm,
       journalize,
     },

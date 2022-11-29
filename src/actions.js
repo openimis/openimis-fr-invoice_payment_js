@@ -330,6 +330,14 @@ export function fetchBills(params) {
   return graphql(payload, ACTION_TYPE.SEARCH_BILLS);
 }
 
+export function fetchBillsExport(params) {
+  const payload = `
+  {
+    billExport${!!params && params.length ? `(${params.join(",")})` : ""}
+  }`
+  return graphql(payload, ACTION_TYPE.BILL_EXPORT);
+}
+
 export function fetchBill(params) {
   const payload = formatPageQuery("bill", params, BILL_FULL_PROJECTION);
   return graphql(payload, ACTION_TYPE.GET_BILL);
