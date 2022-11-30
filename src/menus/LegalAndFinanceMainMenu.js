@@ -5,6 +5,7 @@ import { DoubleArrow } from "@material-ui/icons";
 import { formatMessage, MainMenuContribution, withModulesManager } from "@openimis/fe-core";
 import { LEGAL_AND_FINANCE_MAIN_MENU_CONTRIBUTION_KEY } from "../constants";
 import { withStyles } from "@material-ui/core/styles";
+import { RIGHT_INVOICE_SEARCH, RIGHT_BILL_SEARCH, RIGHT_BILL_AMEND, RIGHT_INVOICE_AMEND } from "./../constants"
 
 const DoubleArrowFlipped = withStyles({
   root: {
@@ -14,23 +15,31 @@ const DoubleArrowFlipped = withStyles({
 
 
 const LegalAndFinanceMainMenu = (props) => {
-  const entries = [
-    {
+  const entries = []
+
+  if (!!props.rights.filter((r) => r >= RIGHT_INVOICE_SEARCH && r <= RIGHT_INVOICE_AMEND).length) {
+    // RIGHT_SEARCH is shared by HF & HQ staff)
+    entries.push({
       text: formatMessage(props.intl, "invoice", "menu.invoices"),
       icon: <DoubleArrow />,
       route: "/invoices",
-    },
-    {
+    });
+  }
+  if (!!props.rights.filter((r) => r >= RIGHT_BILL_SEARCH && r <= RIGHT_BILL_AMEND).length) {
+    // RIGHT_SEARCH is shared by HF & HQ staff)
+    entries.push({
       text: formatMessage(props.intl, "invoice", "menu.bills"),
       icon: <DoubleArrowFlipped />,
       route: "/bills",
-    },
-  ];
+    });
+  }
+  
   entries.push(
     ...props.modulesManager
       .getContribs(LEGAL_AND_FINANCE_MAIN_MENU_CONTRIBUTION_KEY)
       .filter((c) => !c.filter || c.filter(props.rights)),
   );
+  if (!entries.length) return null;
 
   return (
     <MainMenuContribution {...props} header={formatMessage(props.intl, "invoice", "mainMenu")} entries={entries} />
