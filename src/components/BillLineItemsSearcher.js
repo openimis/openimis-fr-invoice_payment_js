@@ -76,7 +76,6 @@ const BillLineItemsSearcher = ({
       filter: "isDeleted: false",
     },
   });
-
   return (
     !!bill?.id && (
       <Searcher
