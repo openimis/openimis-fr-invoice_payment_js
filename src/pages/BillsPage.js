@@ -1,10 +1,10 @@
-import React from "react";
-import { Helmet, withModulesManager, formatMessage } from "@openimis/fe-core";
+import React, { useEffect } from "react";
+import { Helmet, withModulesManager, formatMessage, clearCurrentPaginationPage } from "@openimis/fe-core";
 import { injectIntl } from "react-intl";
 import { withTheme, withStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { RIGHT_BILL_SEARCH } from "../constants";
-import { createInvoiceEventMessage } from "../actions"
+import { createInvoiceEventMessage } from "../actions";
 import BillSearcher from "../components/BillSearcher";
 
 const styles = (theme) => ({
@@ -12,18 +12,23 @@ const styles = (theme) => ({
   fab: theme.fab,
 });
 
-const BILL_SEARCHER_ACTION_CONTRIBUTION_KEY = "invoice.bill.SelectionAction"
+const BILL_SEARCHER_ACTION_CONTRIBUTION_KEY = "invoice.bill.SelectionAction";
 
 const BillsPage = (props) => {
   const { intl, classes, rights } = props;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clearCurrentPaginationPage());
+  }, []);
 
   let actions = [];
   return (
     rights.includes(RIGHT_BILL_SEARCH) && (
       <div className={classes.page}>
         <Helmet title={formatMessage(props.intl, "bill", "bills.pageTitle")} />
-        <BillSearcher 
-          rights={rights} 
+        <BillSearcher
+          rights={rights}
           actions={actions}
           actionsContributionKey={BILL_SEARCHER_ACTION_CONTRIBUTION_KEY}
         />
