@@ -10,13 +10,13 @@ import { CONTAINS_LOOKUP, DEFUALT_DEBOUNCE_TIME } from "../constants";
 import { defaultFilterStyles } from "../util/styles";
 import InvoiceEventTypePicker from "../pickers/InvoiceEventTypePicker";
 
-const BillEventsFilter = ({intl, classes, filters, onChangeFilters }) => {
+const BillEventsFilter = ({ intl, classes, filters, onChangeFilters }) => {
   const debouncedOnChangeFilters = _debounce(onChangeFilters, DEFUALT_DEBOUNCE_TIME);
-  
+
   const filterValue = (filterName) => filters?.[filterName]?.value;
 
   const filterTextFieldValue = (filterName) => (filters[filterName] ? filters[filterName].value : "");
-  
+
   const onChangeStringFilter =
     (filterName, lookup = null) =>
     (value) => {
@@ -36,7 +36,7 @@ const BillEventsFilter = ({intl, classes, filters, onChangeFilters }) => {
             },
           ]);
     };
-  
+
   return (
     <Grid container className={classes.form}>
       <Grid item xs={2} className={classes.item}>
@@ -57,7 +57,7 @@ const BillEventsFilter = ({intl, classes, filters, onChangeFilters }) => {
         />
       </Grid>
     </Grid>
-    );
-  };
-  
-  export default injectIntl(withTheme(withStyles(defaultFilterStyles)(BillEventsFilter)));
+  );
+};
+
+export default injectIntl(withTheme(withStyles(defaultFilterStyles)(BillEventsFilter)));
