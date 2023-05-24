@@ -1,10 +1,12 @@
 import React from "react";
 import { injectIntl } from "react-intl";
-import { withModulesManager, formatMessage, TextInput, NumberInput, PublishedComponent } from "@openimis/fe-core";
+import _debounce from "lodash/debounce";
+
 import { Grid } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
+
+import { withModulesManager, formatMessage, TextInput, NumberInput, PublishedComponent } from "@openimis/fe-core";
 import { CONTAINS_LOOKUP, DEFUALT_DEBOUNCE_TIME, STARTS_WITH_LOOKUP } from "../constants";
-import _debounce from "lodash/debounce";
 import PaymentInvoiceStatusPicker from "../pickers/PaymentInvoiceStatusPicker";
 
 const styles = (theme) => ({
@@ -20,6 +22,8 @@ const styles = (theme) => ({
     const debouncedOnChangeFilters = _debounce(onChangeFilters, DEFUALT_DEBOUNCE_TIME);
   
     const filterValue = (filterName) => filters?.[filterName]?.value;
+
+    const filterTextFieldValue = (filterName) => (filters[filterName] ? filters[filterName].value : "");
   
     const onChangeFilter = (filterName) => (value) => {
       debouncedOnChangeFilters([
@@ -74,7 +78,7 @@ const styles = (theme) => ({
           <TextInput
             module="invoice"
             label="paymentInvoice.codeExt"
-            value={filterValue("codeExt")}
+            value={filterTextFieldValue("codeExt")}
             onChange={onChangeStringFilter("codeExt", CONTAINS_LOOKUP)}
           />
         </Grid>
@@ -82,7 +86,7 @@ const styles = (theme) => ({
           <TextInput
             module="invoice"
             label="paymentInvoice.label"
-            value={filterValue("label")}
+            value={filterTextFieldValue("label")}
             onChange={onChangeStringFilter("label", STARTS_WITH_LOOKUP)}
           />
         </Grid>
@@ -90,7 +94,7 @@ const styles = (theme) => ({
           <TextInput
             module="invoice"
             label="paymentInvoice.codeTp"
-            value={filterValue("codeTp")}
+            value={filterTextFieldValue("codeTp")}
             onChange={onChangeStringFilter("codeTp", CONTAINS_LOOKUP)}
           />
         </Grid>
@@ -98,7 +102,7 @@ const styles = (theme) => ({
           <TextInput
             module="invoice"
             label="paymentInvoice.codeReceipt"
-            value={filterValue("codeReceipt")}
+            value={filterTextFieldValue("codeReceipt")}
             onChange={onChangeStringFilter("codeReceipt", CONTAINS_LOOKUP)}
           />
         </Grid>
@@ -133,7 +137,7 @@ const styles = (theme) => ({
           <TextInput
             module="invoice"
             label="paymentInvoice.paymentOrigin"
-            value={filterValue("paymentOrigin")}
+            value={filterTextFieldValue("paymentOrigin")}
             onChange={onChangeStringFilter("paymentOrigin", CONTAINS_LOOKUP)}
           />
         </Grid>
@@ -141,7 +145,7 @@ const styles = (theme) => ({
           <TextInput
             module="invoice"
             label="paymentInvoice.payerRef"
-            value={filterValue("payerRef")}
+            value={filterTextFieldValue("payerRef")}
             onChange={onChangeStringFilter("payerRef", CONTAINS_LOOKUP)}
           />
         </Grid>

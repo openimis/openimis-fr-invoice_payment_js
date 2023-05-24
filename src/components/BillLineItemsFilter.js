@@ -1,9 +1,11 @@
 import React from "react";
-import { TextInput, NumberInput } from "@openimis/fe-core";
+import _debounce from "lodash/debounce";
+
 import { Grid } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
+
+import { TextInput, NumberInput } from "@openimis/fe-core";
 import { CONTAINS_LOOKUP, DEFUALT_DEBOUNCE_TIME } from "../constants";
-import _debounce from "lodash/debounce";
 
 const styles = (theme) => ({
     form: {
@@ -18,6 +20,8 @@ const styles = (theme) => ({
     const debouncedOnChangeFilters = _debounce(onChangeFilters, DEFUALT_DEBOUNCE_TIME);
   
     const filterValue = (filterName) => filters?.[filterName]?.value;
+
+    const filterTextFieldValue = (filterName) => (filters[filterName] ? filters[filterName].value : "");
   
     const onChangeFilter = (filterName) => (value) => {
       debouncedOnChangeFilters([
@@ -55,7 +59,7 @@ const styles = (theme) => ({
           <TextInput
             module="bill"
             label="billItem.code"
-            value={filterValue("code")}
+            value={filterTextFieldValue("code")}
             onChange={onChangeStringFilter("code", CONTAINS_LOOKUP)}
           />
         </Grid>
@@ -63,7 +67,7 @@ const styles = (theme) => ({
           <TextInput
             module="bill"
             label="billItem.description"
-            value={filterValue("description")}
+            value={filterTextFieldValue("description")}
             onChange={onChangeStringFilter("description", CONTAINS_LOOKUP)}
           />
         </Grid>
@@ -71,7 +75,7 @@ const styles = (theme) => ({
           <TextInput
             module="bill"
             label="billItem.ledgerAccount"
-            value={filterValue("ledgerAccount")}
+            value={filterTextFieldValue("ledgerAccount")}
             onChange={onChangeStringFilter("ledgerAccount", CONTAINS_LOOKUP)}
           />
         </Grid>
