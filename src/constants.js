@@ -107,7 +107,7 @@ export const INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_PROPS = {
   PICKER: "picker",
   PICKER_PROJECTION: "pickerProjection",
 };
-export const DEFUALT_DEBOUNCE_TIME = 500;
+export const DEFUALT_DEBOUNCE_TIME = 200;
 export const PICKER_NESTED_PROPERTY_REGEX = /^\w+{[\w\s]+}$/;
 export const PICKER_NESTED_PROPERTY_NAME_REGEX = /^\w+/;
 export const PICKER_NESTED_PROPERTY_PROJECTION_REGEX = /{[\w\s]+}$/;
