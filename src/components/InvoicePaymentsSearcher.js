@@ -99,9 +99,15 @@ const InvoicePaymentsSearcher = ({
     const queryParams = Object.keys(filters)
       .filter((f) => !!filters[f]["filter"])
       .map((f) => filters[f]["filter"]);
-    pageSize && queryParams.push(`first: ${pageSize}`);
-    beforeCursor && queryParams.push(`before: "${beforeCursor}"`);
-    afterCursor && queryParams.push(`after: "${afterCursor}"`);
+    !beforeCursor && !afterCursor && queryParams.push(`first: ${pageSize}`);
+    if (afterCursor) {
+      queryParams.push(`after: "${afterCursor}"`);
+      queryParams.push(`first: ${pageSize}`);
+    }
+    if (beforeCursor) {
+      queryParams.push(`before: "${beforeCursor}"`);
+      queryParams.push(`last: ${pageSize}`);
+    }
     orderBy && queryParams.push(`orderBy: ["${orderBy}"]`);
     setQueryParams(queryParams);
     return queryParams;

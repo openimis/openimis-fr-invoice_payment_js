@@ -47,7 +47,7 @@
     "delete": {
       "confirm": {
         "title": "Delete {code}?",
-        "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
+        "message": "Deleting data does not mean erasing it from openIMIS database. The data will only be deactivated from the viewed list."
       },
       "mutationLabel": "Delete Invoice {code}"
     }
@@ -104,7 +104,7 @@
     "delete": {
       "confirm": {
         "title": "Delete {invoicePaymentLabel}?",
-        "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
+        "message": "Deleting data does not mean erasing it from openIMIS database. The data will only be deactivated from the viewed list."
       },
       "mutationLabel": "Delete Invoice Payment {invoicePaymentLabel} of {invoiceCode}"
     }
@@ -164,7 +164,7 @@
     "delete": {
       "confirm": {
         "title": "Delete {code}?",
-        "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
+        "message": "Deleting data does not mean erasing it from openIMIS database. The data will only be deactivated from the viewed list."
       },
       "mutationLabel": "Delete Bill {code}"
     },
@@ -224,7 +224,7 @@
     "delete": {
       "confirm": {
         "title": "Delete {billPaymentLabel}?",
-        "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
+        "message": "Deleting data does not mean erasing it from openIMIS database. The data will only be deactivated from the viewed list."
       },
       "mutationLabel": "Delete Bill Payment {billPaymentLabel} of {billCode}"
     }
@@ -290,7 +290,7 @@
     "delete": {
       "confirm": {
         "title": "Delete {paymentInvoiceLabel}?",
-        "message": "Deleting data does not mean erasing it from OpenIMIS database. The data will only be deactivated from the viewed list."
+        "message": "Deleting data does not mean erasing it from openIMIS database. The data will only be deactivated from the viewed list."
       },
       "mutationLabel": "Delete Payment {paymentInvoiceLabel} of {code}"
     }
