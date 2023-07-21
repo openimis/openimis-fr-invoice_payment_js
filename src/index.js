@@ -7,6 +7,7 @@ import InvoiceStatusPicker from "./pickers/InvoiceStatusPicker";
 import InvoicePage from "./pages/InvoicePage";
 import BillsPage from "./pages/BillsPage";
 import BillPage from "./pages/BillPage";
+import BillSearcher from "./components/BillSearcher";
 import { InvoiceLineItemsTabLabel, InvoiceLineItemsTabPanel } from "./components/InvoiceLineItemsTab";
 import { InvoicePaymentsTabLabel, InvoicePaymentsTabPanel } from "./components/InvoicePaymentsTab";
 import { InvoiceEventsTabLabel, InvoiceEventsTabPanel } from "./components/InvoiceEventsTab";
@@ -33,6 +34,7 @@ const DEFAULT_CONFIG = {
     { key: "invoice.route.invoice", ref: ROUTE_INVOICE },
     { key: "invoice.InvoiceStatusPicker", ref: InvoiceStatusPicker },
     { key: "bill.route.bill", ref: ROUTE_BILL },
+    { key: "bill.BillSearcher", ref: BillSearcher}
   ],
   "invoice.TabPanel.label": [InvoiceLineItemsTabLabel, InvoicePaymentsTabLabel, InvoiceEventsTabLabel],
   "invoice.TabPanel.panel": [InvoiceLineItemsTabPanel, InvoicePaymentsTabPanel, InvoiceEventsTabPanel],
