@@ -48,6 +48,8 @@ export const STATUS = {
   CANCELLED: "3",
   DELETED: "4",
   SUSPENDED: "5",
+  UNPAID: "6",
+  RECONCILIATED: "7",
 };
 export const SUBJECT_TYPE_OPTIONS = [
   {
