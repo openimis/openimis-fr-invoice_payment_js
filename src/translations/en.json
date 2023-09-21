@@ -37,7 +37,9 @@
       "PAYED": "Payed",
       "CANCELLED": "Cancelled",
       "DELETED": "Deleted",
-      "SUSPENDED": "Suspended"
+      "SUSPENDED": "Suspended",
+      "UNPAID": "Unpaid",
+      "RECONCILIATED": "Reconciliated"
     },
     "currencyTpCode": "Currency Recipient",
     "currencyCode": "Currency",
@@ -154,7 +156,9 @@
       "PAYED": "Payed",
       "CANCELLED": "Cancelled",
       "DELETED": "Deleted",
-      "SUSPENDED": "Suspended"
+      "SUSPENDED": "Suspended",
+      "UNPAID": "Unpaid",
+      "RECONCILIATED": "Reconciliated"
     },
     "currencyTpCode": "Currency Thirdparty",
     "currencyCode": "Currency",
