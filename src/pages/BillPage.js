@@ -90,7 +90,7 @@ const BillPage = ({
 
   const actions = [
     !!bill && 
-      getEnumValue(bill?.status) !== STATUS.PAYED && {
+      getEnumValue(bill?.status) !== STATUS.PAID && {
         doIt: openDeleteBillConfirmDialog,
         icon: <DeleteIcon />,
         tooltip: formatMessage(intl, "invoice", "deleteButtonTooltip"),

@@ -159,7 +159,7 @@ const BillSearcher = ({
         <Tooltip title={formatMessage(intl, "invoice", "deleteButtonTooltip")}>
           <IconButton
             onClick={() => onDelete(bill)}
-            disabled={bill?.status === STATUS.PAYED || deletedBillUuids.includes(bill.id)}
+            disabled={bill?.status === STATUS.PAID || deletedBillUuids.includes(bill.id)}
           >
             <DeleteIcon />
           </IconButton>
