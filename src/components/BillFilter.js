@@ -27,12 +27,13 @@ const BillFilter = ({ intl, classes, filters, onChangeFilters }) => {
 
   const filterTextFieldValue = (filterName) => (filters[filterName] ? filters[filterName].value : "");
 
-  const onChangeFilter = (filterName) => (value) => {
+  const onChangeDecimalFilter = (filterName) => (value) => {
+    const decimalValue = Number(value).toFixed(2);
     debouncedOnChangeFilters([
       {
         id: filterName,
-        value: !!value ? value : null,
-        filter: `${filterName}: ${value}`,
+        value: !!decimalValue ? decimalValue : null,
+        filter: `${filterName}: "${decimalValue}"`,
       },
     ]);
   };
@@ -113,7 +114,8 @@ const BillFilter = ({ intl, classes, filters, onChangeFilters }) => {
               {
                 id: "status",
                 value: value,
-                filter: `status: "${value}"`,
+                // probably won't work on mssql https://openimis.atlassian.net/browse/OP-1546
+                filter: `status: A_${value}`,
               },
             ])
           }
@@ -125,7 +127,7 @@ const BillFilter = ({ intl, classes, filters, onChangeFilters }) => {
           label="amountTotal"
           min={0}
           value={filterValue("amountTotal")}
-          onChange={onChangeFilter("amountTotal")}
+          onChange={onChangeDecimalFilter("amountTotal")}
         />
       </Grid>
     </Grid>
