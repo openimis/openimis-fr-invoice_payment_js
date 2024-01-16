@@ -44,10 +44,12 @@ export const ENUM_PREFIX_LENGTH = 2;
 export const STATUS = {
   DRAFT: "0",
   VALIDATED: "1",
-  PAYED: "2",
+  PAID: "2",
   CANCELLED: "3",
   DELETED: "4",
   SUSPENDED: "5",
+  UNPAID: "6",
+  RECONCILIATED: "7",
 };
 export const SUBJECT_TYPE_OPTIONS = [
   {
@@ -107,7 +109,7 @@ export const INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_PROPS = {
   PICKER: "picker",
   PICKER_PROJECTION: "pickerProjection",
 };
-export const DEFUALT_DEBOUNCE_TIME = 500;
+export const DEFUALT_DEBOUNCE_TIME = 200;
 export const PICKER_NESTED_PROPERTY_REGEX = /^\w+{[\w\s]+}$/;
 export const PICKER_NESTED_PROPERTY_NAME_REGEX = /^\w+/;
 export const PICKER_NESTED_PROPERTY_PROJECTION_REGEX = /{[\w\s]+}$/;

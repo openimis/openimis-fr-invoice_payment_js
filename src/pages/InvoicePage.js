@@ -87,7 +87,7 @@ const InvoicePage = ({
 
   const actions = [
     !!invoice &&
-      getEnumValue(invoice?.status) !== STATUS.PAYED && {
+      getEnumValue(invoice?.status) !== STATUS.PAID && {
         doIt: openDeleteInvoiceConfirmDialog,
         icon: <DeleteIcon />,
         tooltip: formatMessage(intl, "invoice", "deleteButtonTooltip"),
