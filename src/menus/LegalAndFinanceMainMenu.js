@@ -3,9 +3,14 @@ import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 import { DoubleArrow } from "@material-ui/icons";
 import { formatMessage, MainMenuContribution, withModulesManager } from "@openimis/fe-core";
-import { LEGAL_AND_FINANCE_MAIN_MENU_CONTRIBUTION_KEY } from "../constants";
+import {
+  LEGAL_AND_FINANCE_MAIN_MENU_CONTRIBUTION_KEY,
+  RIGHT_INVOICE_SEARCH,
+  RIGHT_BILL_SEARCH,
+  RIGHT_BILL_AMEND,
+  RIGHT_INVOICE_AMEND,
+} from "../constants";
 import { withStyles } from "@material-ui/core/styles";
-import { RIGHT_INVOICE_SEARCH, RIGHT_BILL_SEARCH, RIGHT_BILL_AMEND, RIGHT_INVOICE_AMEND } from "./../constants";
 
 const DoubleArrowFlipped = withStyles({
   root: {
@@ -21,7 +26,7 @@ const LegalAndFinanceMainMenu = (props) => {
 
   const entries = [];
 
-  if (!!rights.filter((r) => r >= RIGHT_INVOICE_SEARCH && r <= RIGHT_INVOICE_AMEND).length) {
+  if (rights.filter((r) => r >= RIGHT_INVOICE_SEARCH && r <= RIGHT_INVOICE_AMEND).length) {
     // RIGHT_SEARCH is shared by HF & HQ staff)
     entries.push({
       text: formatMessage(intl, "invoice", "menu.invoices"),
@@ -29,7 +34,7 @@ const LegalAndFinanceMainMenu = (props) => {
       route: "/invoices",
     });
   }
-  if (!!rights.filter((r) => r >= RIGHT_BILL_SEARCH && r <= RIGHT_BILL_AMEND).length) {
+  if (rights.filter((r) => r >= RIGHT_BILL_SEARCH && r <= RIGHT_BILL_AMEND).length) {
     // RIGHT_SEARCH is shared by HF & HQ staff)
     entries.push({
       text: formatMessage(intl, "invoice", "menu.bills"),
