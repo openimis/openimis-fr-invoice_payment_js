@@ -125,7 +125,6 @@ const mapStateToProps = (state, props) => ({
   invoice: state.invoice.invoice,
   errorInvoice: state.invoice.errorInvoice,
   policyHolders: state.policyHolder.policyHolders,
-  confirmed: state.core.confirmed,
   submittingMutation: state.invoice.submittingMutation,
   mutation: state.invoice.mutation,
 });
