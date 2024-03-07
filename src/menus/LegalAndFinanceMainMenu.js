@@ -22,9 +22,21 @@ const LegalAndFinanceMainMenu = (props) => {
   const { modulesManager, rights, intl } = props;
   const isWorker = modulesManager.getConf("fe-core", "isWorker", false);
 
-  if (isWorker) return null;
-
   const entries = [];
+
+  if (isWorker) {
+    if (rights.includes(RIGHT_BILL_SEARCH || RIGHT_BILL_AMEND)) {
+      entries.push({
+        text: formatMessage(intl, "invoice", "menu.bills"),
+        icon: <DoubleArrowFlipped />,
+        route: "/bills",
+      });
+    }
+
+    if (!entries.length) return null;
+
+    return <MainMenuContribution {...props} header={formatMessage(intl, "invoice", "mainMenu")} entries={entries} />;
+  }
 
   if (rights.filter((r) => r >= RIGHT_INVOICE_SEARCH && r <= RIGHT_INVOICE_AMEND).length) {
     // RIGHT_SEARCH is shared by HF & HQ staff)
