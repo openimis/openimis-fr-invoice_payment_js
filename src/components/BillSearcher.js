@@ -24,7 +24,7 @@ import {
   DEFAULT_PAGE_SIZE,
   ROWS_PER_PAGE_OPTIONS,
   EMPTY_STRING,
-  RIGHT_BILL_UPDATE,
+  RIGHT_BILL_SEARCH,
   RIGHT_BILL_DELETE,
   STATUS,
 } from "../constants";
@@ -122,7 +122,7 @@ const BillSearcher = ({
       "bill.amountTotal",
       "bill.status.label",
     ];
-    if (rights.includes(RIGHT_BILL_UPDATE)) {
+    if (rights.includes(RIGHT_BILL_SEARCH)) {
       headers.push("emptyLabel");
     }
     return headers;
@@ -137,7 +137,7 @@ const BillSearcher = ({
       (bill) => bill.amountTotal,
       (bill) => <InvoiceStatusPicker value={bill?.status} readOnly />,
     ];
-    if (rights.includes(RIGHT_BILL_UPDATE)) {
+    if (rights.includes(RIGHT_BILL_SEARCH)) {
       formatters.push((bill) => (
         <Tooltip title={formatMessage(intl, "invoice", "editButtonTooltip")}>
           <IconButton
@@ -179,7 +179,7 @@ const BillSearcher = ({
   const billUpdatePageUrl = (bill) => modulesManager.getRef("bill.route.bill") + "/" + bill?.id;
 
   const onDoubleClick = (bill, newTab = false) =>
-    rights.includes(RIGHT_BILL_UPDATE) &&
+    rights.includes(RIGHT_BILL_SEARCH) &&
     !deletedBillUuids.includes(bill.id) &&
     historyPush(modulesManager, history, "bill.route.bill", [bill?.id], newTab);
 

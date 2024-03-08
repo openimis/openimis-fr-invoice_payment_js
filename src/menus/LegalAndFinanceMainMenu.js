@@ -9,6 +9,7 @@ import {
   RIGHT_BILL_SEARCH,
   RIGHT_BILL_AMEND,
   RIGHT_INVOICE_AMEND,
+  DEFAULT,
 } from "../constants";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -20,7 +21,7 @@ const DoubleArrowFlipped = withStyles({
 
 const LegalAndFinanceMainMenu = (props) => {
   const { modulesManager, rights, intl } = props;
-  const isWorker = modulesManager.getConf("fe-core", "isWorker", false);
+  const isWorker = modulesManager.getConf("fe-core", "isWorker", DEFAULT.IS_WORKER);
 
   const entries = [];
 

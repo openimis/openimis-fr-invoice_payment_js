@@ -103,6 +103,7 @@ export const THIRDPARTY_TYPE_OPTIONS_BILL = [
   }
 ];
 
+export const WORKER_VOUCHER_HEAD_PANEL_CONTRIB = "workerVoucher.VoucherHeadPanel";
 export const INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_CONTRIBUTION_KEY = "invoice.SubjectAndThirdpartyPicker";
 export const INVOICE_SUBJECT_AND_THIRDPARTY_PICKER_PROPS = {
   TYPE: "type",
@@ -172,4 +173,8 @@ export const EVENT_TYPE = {
 export const EMPTY_EVENT_MESSAGE = {
   eventType: EVENT_TYPE.MESSAGE,
   message: "",
+};
+
+export const DEFAULT = {
+  IS_WORKER: false,
 };
