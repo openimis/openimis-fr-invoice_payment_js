@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 
-import { IconButton, Tooltip, Button, Dialog, DialogActions, DialogTitle } from "@material-ui/core";
+import { IconButton, Tooltip, Button, Dialog, DialogActions, DialogTitle, DialogContent } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -72,13 +72,17 @@ const BillSearcher = ({
   }, [confirmed]);
 
   useEffect(() => {
-    setFailedExport(true);
+    if (errorBillsExport) {
+      setFailedExport(true);
+    }
   }, [errorBillsExport]);
 
   useEffect(() => {
     if (billsExport) {
       downloadExport(billsExport, "bill_export.csv")();
     }
+
+    return setFailedExport(false);
   }, [billsExport]);
 
   useEffect(() => {
@@ -250,12 +254,15 @@ const BillSearcher = ({
           "status": "Status",
         }}
       />
-
       {failedExport && (
-        <Dialog fullWidth maxWidth="sm">
-          <DialogTitle>{errorBillsExport}</DialogTitle>
+        <Dialog open={failedExport} fullWidth maxWidth="sm">
+          <DialogTitle>{errorBillsExport?.message}</DialogTitle>
+          <DialogContent>
+            <strong>{`${errorBillsExport?.code}: `}</strong>
+            {errorBillsExport?.detail}
+          </DialogContent>
           <DialogActions>
-            <Button onClick={setFailedExport(false)} variant="contained">
+            <Button onClick={() => setFailedExport(false)} color="primary" variant="contained">
               {formatMessage(intl, "invoice", "ok")}
             </Button>
           </DialogActions>
