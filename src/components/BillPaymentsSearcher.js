@@ -132,7 +132,7 @@ const BillPaymentsSearcher = ({
       (billPayment) => billPayment.fees,
       (billPayment) => billPayment.amountReceived,
       (billPayment) =>
-        !!billPayment.datePayment
+        billPayment.datePayment
           ? formatDateFromISO(modulesManager, intl, billPayment.datePayment)
           : EMPTY_STRING,
       (billPayment) => billPayment.paymentOrigin,
