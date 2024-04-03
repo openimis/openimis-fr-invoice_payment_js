@@ -94,7 +94,15 @@ const BillPaymentsFilter = ({ classes, filters, onChangeFilters }) => {
           label="billPayment.fees"
           min={0}
           value={filterValue("fees")}
-          onChange={onChangeFilter("fees")}
+          onChange={(fee) =>
+            onChangeFilters([
+              {
+                id: "fees",
+                value: !fee ? null : fee,
+                filter: fee ? `fees: "${parseFloat(fee)}"` : null,
+              },
+            ])
+          }
         />
       </Grid>
       <Grid item xs={2} className={classes.item}>
@@ -103,7 +111,15 @@ const BillPaymentsFilter = ({ classes, filters, onChangeFilters }) => {
           label="billPayment.amountReceived"
           min={0}
           value={filterValue("amountReceived")}
-          onChange={onChangeFilter("amountReceived")}
+          onChange={(amountReceived) =>
+            onChangeFilters([
+              {
+                id: "amountReceived",
+                value: !amountReceived ? null : amountReceived,
+                filter: amountReceived ? `amountReceived: "${parseFloat(amountReceived)}"` : null,
+              },
+            ])
+          }
         />
       </Grid>
       <Grid item xs={2} className={classes.item}>
