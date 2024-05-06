@@ -1,4 +1,7 @@
-import { graphql, formatPageQuery, formatPageQueryWithCount, formatMutation } from "@openimis/fe-core";
+import {
+    graphql, formatPageQuery, formatPageQueryWithCount, formatMutation, baseApiUrl,
+    coreAlert, formatMessage, openBlob
+} from "@openimis/fe-core";
 import { ACTION_TYPE } from "./reducer";
 import { ERROR, REQUEST, SUCCESS } from "./util/action-type";
 
@@ -491,4 +494,28 @@ export function deletePaymentInvoice(paymentInvoice, clientMutationLabel) {
       requestedDateTime,
     },
   );
+}
+
+export function generateReport(prms, intl) {
+  var qParams = {
+    bill_uuid: prms.billId,
+  }
+  var url = new URL(`${window.location.origin}${baseApiUrl}/report/bill_detail/${prms.fileFormat}/`);
+  url.search = new URLSearchParams(qParams);
+  return (dispatch) => {
+    return fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to generate report: ${response.status} ${response.statusText}`);
+        }
+        return response.blob();
+      })
+      .then(blob => openBlob(blob, `bill-${prms.billId}.${prms.fileFormat}`, prms.fileFormat))
+      .then(e => dispatch({ type: 'INVOICE_BILL_REPORT_DONE', payload: prms }))
+      .catch(error => {
+        dispatch({ type: 'INVOICE_BILL_REPORT_ERROR', payload: error });
+        dispatch(coreAlert(formatMessage(intl, "invoice", "bill.report.errorHeader"),
+                            formatMessage(intl, "invoice", "bill.report.errorDetail")));
+      });
+  }
 }

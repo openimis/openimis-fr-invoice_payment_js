@@ -1,5 +1,9 @@
 import React from "react";
-import { Grid, Divider, Typography } from "@material-ui/core";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Grid, Divider, Typography, Button } from "@material-ui/core";
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
+import TableChartIcon from '@material-ui/icons/TableChart';
 import { withModulesManager, TextInput, FormattedMessage, PublishedComponent, NumberInput } from "@openimis/fe-core";
 import { injectIntl } from "react-intl";
 import { withTheme, withStyles } from "@material-ui/core/styles";
@@ -7,6 +11,7 @@ import SubjectTypePickerBill from "../pickers/SubjectTypePickerBill";
 import ThirdPartyTypePickerBill from "../pickers/ThirdPartyTypePickerBill";
 import { getSubjectAndThirdpartyTypePicker } from "../util/subject-and-thirdparty-picker";
 import InvoiceStatusPicker from "../pickers/InvoiceStatusPicker";
+import { generateReport } from "../actions"
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -16,19 +21,38 @@ const styles = (theme) => ({
   },
 });
 
-const BillHeadPanel = ({ modulesManager, classes, bill, mandatoryFieldsEmpty }) => {
+
+const BillHeadPanel = ({ modulesManager, classes, bill, mandatoryFieldsEmpty, generateReport, intl }) => {
+  const handleGenerateReport = (fileFormat) => {
+    const params = {
+      fileFormat: fileFormat,
+      billId: bill.id,
+    }
+    generateReport(params, intl);
+  }
+
   const taxAnalysisTotal = !!bill?.taxAnalysis ? JSON.parse(bill.taxAnalysis)?.["total"] : null;
   return (
     <>
       <Grid container className={classes.tableTitle}>
-        <Grid item>
-          <Grid container align="center" justify="center" direction="column" className={classes.fullHeight}>
+        <Grid item xs={10}>
+          <Grid container direction="column" className={classes.fullHeight}>
             <Grid item>
               <Typography>
                 <FormattedMessage module="invoice" id="bill.headPanelTitle" />
               </Typography>
             </Grid>
           </Grid>
+        </Grid>
+        <Grid item container xs={1} className={classes.item}>
+          <Button startIcon={<PictureAsPdfIcon />} variant="contained" onClick={() => handleGenerateReport("pdf")}>
+            <FormattedMessage module="invoice" id="bill.downloadPDF" />
+          </Button>
+        </Grid>
+        <Grid item container xs={1} className={classes.item}>
+          <Button startIcon={<TableChartIcon />} variant="contained" onClick={() => handleGenerateReport("xlsx")}>
+            <FormattedMessage module="invoice" id="bill.downloadXLSX" />
+          </Button>
         </Grid>
       </Grid>
       <Divider />
@@ -148,4 +172,10 @@ const BillHeadPanel = ({ modulesManager, classes, bill, mandatoryFieldsEmpty }) 
   );
 };
 
-export default withModulesManager(injectIntl(withTheme(withStyles(styles)(BillHeadPanel))));
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators(
+        { generateReport },
+        dispatch);
+};
+
+export default withModulesManager(injectIntl(withTheme(withStyles(styles)(connect(null, mapDispatchToProps)(BillHeadPanel)))));

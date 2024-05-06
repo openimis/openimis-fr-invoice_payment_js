@@ -168,7 +168,13 @@
       },
       "mutationLabel": "Delete Bill {code}"
     },
-    "selection.count": "Selected {count} bill(s)"
+    "selection.count": "Selected {count} bill(s)",
+    "report": {
+      "errorHeader": "Error",
+      "errorDetail": "There was an error with the report generation"
+    },
+    "downloadPDF": "Download PDF",
+    "downloadXLSX": "Download XLSX"
   },
   "bills": {
     "pageTitle": "Bills",
