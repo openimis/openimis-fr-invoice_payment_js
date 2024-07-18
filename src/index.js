@@ -16,6 +16,7 @@ import { BillLineItemsTabLabel, BillLineItemsTabPanel } from "./components/BillL
 import { BillPaymentsTabLabel, BillPaymentsTabPanel } from "./components/BillPaymentsTab";
 import { BillEventsTabLabel, BillEventsTabPanel } from "./components/BillEventsTab";
 import { getSubjectAndThirdpartyTypePicker } from "./util/subject-and-thirdparty-picker";
+import { fetchBillLineItems } from "./actions";
 
 const ROUTE_INVOICES = "invoices";
 const ROUTE_INVOICE = "invoices/invoice";
@@ -39,6 +40,7 @@ const DEFAULT_CONFIG = {
     { key: "invoice.ThirdPartyTypePickerBill", ref: ThirdPartyTypePickerBill },
     { key: "bill.route.bill", ref: ROUTE_BILL },
     { key: "bill.util.getSubjectAndThirdpartyTypePicker", ref: getSubjectAndThirdpartyTypePicker },
+    { key: "bill.action.fetchBillLineItems", ref: fetchBillLineItems },
   ],
   "invoice.TabPanel.label": [InvoiceLineItemsTabLabel, InvoicePaymentsTabLabel, InvoiceEventsTabLabel],
   "invoice.TabPanel.panel": [InvoiceLineItemsTabPanel, InvoicePaymentsTabPanel, InvoiceEventsTabPanel],
