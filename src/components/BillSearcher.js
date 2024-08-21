@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { injectIntl } from "react-intl";
 
 import { IconButton, Tooltip, Button, Dialog, DialogActions, DialogTitle, DialogContent } from "@material-ui/core";
@@ -18,6 +18,7 @@ import {
   withHistory,
   historyPush,
   downloadExport,
+  decodeId,
 } from "@openimis/fe-core";
 import { fetchBills, deleteBill, fetchBillsExport } from "../actions";
 import {
@@ -27,6 +28,9 @@ import {
   RIGHT_BILL_SEARCH,
   RIGHT_BILL_DELETE,
   STATUS,
+  DEFAULT,
+  INSPECTOR_RIGHT,
+  ADMIN_RIGHT,
 } from "../constants";
 import BillFilter from "./BillFilter";
 import InvoiceStatusPicker from "../pickers/InvoiceStatusPicker";
@@ -56,10 +60,14 @@ const BillSearcher = ({
   actions,
   actionsContributionKey,
 }) => {
+  const prevSubmittingMutationRef = useRef();
   const [billToDelete, setBillToDelete] = useState(null);
   const [deletedBillUuids, setDeletedBillUuids] = useState([]);
   const [failedExport, setFailedExport] = useState(false);
-  const prevSubmittingMutationRef = useRef();
+  const [queryParams, setQueryParams] = useState([]);
+  const { economicUnit } = useSelector((state) => state.policyHolder);
+  const economicUnitConfig = modulesManager.getConf("fe-core", "App.economicUnitConfig", DEFAULT.ECONOMIC_UNIT_CONFIG);
+  const isAdminOrInspector = rights.includes(INSPECTOR_RIGHT) || rights.includes(ADMIN_RIGHT);
 
   useEffect(() => billToDelete && openConfirmDialog(), [billToDelete]);
 
@@ -115,7 +123,24 @@ const BillSearcher = ({
     [billToDelete],
   );
 
-  const fetch = (params) => fetchBills(params);
+  const fetch = useCallback(
+    (params) => {
+      try {
+        const actionParams = [...params];
+
+        const decodedId = decodeId(economicUnit?.id ?? EMPTY_STRING);
+
+        if (economicUnitConfig && economicUnit?.id && !isAdminOrInspector) {
+          actionParams.push(`subjectId:"${decodedId}"`);
+        }
+
+        fetchBills(actionParams);
+      } catch (error) {
+        throw new Error(`[BILL_SEARCHER]: Fetching bills failed. ${error}`);
+      }
+    },
+    [economicUnit],
+  );
 
   const headers = () => {
     const headers = [
@@ -198,6 +223,34 @@ const BillSearcher = ({
     },
   });
 
+  const filtersToQueryParams = ({ filters, pageSize, beforeCursor, afterCursor, orderBy }) => {
+    const queryParams = Object.keys(filters)
+      .filter((f) => !!filters[f].filter)
+      .map((f) => filters[f].filter);
+    if (!beforeCursor && !afterCursor) {
+      queryParams.push(`first: ${pageSize}`);
+    }
+    if (afterCursor) {
+      queryParams.push(`after: "${afterCursor}"`);
+      queryParams.push(`first: ${pageSize}`);
+    }
+    if (beforeCursor) {
+      queryParams.push(`before: "${beforeCursor}"`);
+      queryParams.push(`last: ${pageSize}`);
+    }
+    if (orderBy) {
+      queryParams.push(`orderBy: ["${orderBy}"]`);
+    }
+    setQueryParams(queryParams);
+    return queryParams;
+  };
+
+  useEffect(() => {
+    if (queryParams.length) {
+      fetch(queryParams);
+    }
+  }, [economicUnit, queryParams]);
+
   return (
     <div>
       <Searcher
@@ -209,6 +262,7 @@ const BillSearcher = ({
         fetchingItems={fetchingBills}
         fetchedItems={fetchedBills}
         errorItems={errorBills}
+        filtersToQueryParams={filtersToQueryParams}
         tableTitle={formatMessageWithValues(intl, "bill", "bills.searcherResultsTitle", {
           billsTotalCount,
         })}

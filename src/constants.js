@@ -32,6 +32,8 @@ export const RIGHT_BILL_EVENT_DELETE = 156304;
 export const RIGHT_BILL_EVENT_CREATE_MESSAGE = 156306;
 export const RIGHT_BILL_EVENT_DELETE_MY_MESSAGE = 156307;
 export const RIGHT_BILL_EVENT_DELETE_ALL_MESSAGE = 156308;
+export const INSPECTOR_RIGHT = 204005;
+export const ADMIN_RIGHT = 204004;
 export const DEFAULT_PAGE_SIZE = 10;
 export const ROWS_PER_PAGE_OPTIONS = [10, 20, 50, 100];
 export const EMPTY_STRING = "";
@@ -177,4 +179,5 @@ export const EMPTY_EVENT_MESSAGE = {
 
 export const DEFAULT = {
   IS_WORKER: false,
+  ECONOMIC_UNIT_CONFIG: false,
 };
