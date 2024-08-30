@@ -69,6 +69,13 @@ const BillSearcher = ({
   const economicUnitConfig = modulesManager.getConf("fe-core", "App.economicUnitConfig", DEFAULT.ECONOMIC_UNIT_CONFIG);
   const isAdminOrInspector = rights.includes(INSPECTOR_RIGHT) || rights.includes(ADMIN_RIGHT);
 
+  const additionalExportFields = {
+  };
+  
+  if (economicUnitConfig && economicUnit?.id && !isAdminOrInspector) {
+    additionalExportFields.subjectId = decodeId(economicUnit?.id);
+  }
+
   useEffect(() => billToDelete && openConfirmDialog(), [billToDelete]);
 
   useEffect(() => {
@@ -307,6 +314,7 @@ const BillSearcher = ({
           "dateBill": "Date Bill",
           "status": "Status",
         }}
+        additionalExportFields={additionalExportFields}
       />
       {failedExport && (
         <Dialog open={failedExport} fullWidth maxWidth="sm">
