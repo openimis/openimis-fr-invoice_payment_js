@@ -15,16 +15,12 @@ import {
   coreConfirm,
 } from "@openimis/fe-core";
 import { fetchBillPayments, deleteBillPayment } from "../actions";
-import {
-  DEFAULT_PAGE_SIZE,
-  EMPTY_STRING,
-  RIGHT_BILL_PAYMENT_DELETE,
-  ROWS_PER_PAGE_OPTIONS,
-} from "../constants";
+import { DEFAULT_PAGE_SIZE, EMPTY_STRING, RIGHT_BILL_PAYMENT_DELETE, ROWS_PER_PAGE_OPTIONS } from "../constants";
 import { ACTION_TYPE } from "../reducer";
 import BillPaymentsFilter from "./BillPaymentsFilter";
 
 const BillPaymentsSearcher = ({
+  isWorker,
   intl,
   modulesManager,
   rights,
@@ -65,7 +61,7 @@ const BillPaymentsSearcher = ({
       refetch();
     }
   }, [submittingMutation]);
-  
+
   useEffect(() => {
     prevSubmittingMutationRef.current = submittingMutation;
   });
@@ -113,56 +109,82 @@ const BillPaymentsSearcher = ({
     return queryParams;
   };
 
-  const headers = () => [
-    "billPayment.codeExt",
-    "billPayment.label",
-    "billPayment.codeTp",
-    "billPayment.codeReceipt",
-    "billPayment.fees",
-    "billPayment.amountReceived",
-    "billPayment.datePayment",
-  ];
+  const headersSetter = () => {
+    const headers = [
+      "billPayment.codeExt",
+      "billPayment.label",
+      "billPayment.amountReceived",
+      "billPayment.datePayment",
+    ];
+
+    if (!isWorker) {
+      const additionalHeaders = [
+        "billPayment.codeTp",
+        "billPayment.codeReceipt",
+        "billPayment.fees",
+        "billPayment.paymentOrigin",
+      ];
+
+      headers.push(...additionalHeaders);
+    }
+
+    return headers;
+  };
 
   const itemFormatters = () => {
     const formatters = [
       (billPayment) => billPayment.codeExt,
       (billPayment) => billPayment.label,
-      (billPayment) => billPayment.codeTp,
-      (billPayment) => billPayment.codeReceipt,
-      (billPayment) => billPayment.fees,
       (billPayment) => billPayment.amountReceived,
       (billPayment) =>
-        billPayment.datePayment
-          ? formatDateFromISO(modulesManager, intl, billPayment.datePayment)
-          : EMPTY_STRING,
-      (billPayment) => billPayment.paymentOrigin,
+        billPayment.datePayment ? formatDateFromISO(modulesManager, intl, billPayment.datePayment) : EMPTY_STRING,
     ];
 
-    if (rights.includes(RIGHT_BILL_PAYMENT_DELETE)) {
+    if (!isWorker) {
+      const additionalFormatters = [
+        (billPayment) => billPayment.codeTp,
+        (billPayment) => billPayment.codeReceipt,
+        (billPayment) => billPayment.fees,
+        (billPayment) => billPayment.paymentOrigin,
+      ];
+
+      formatters.push(...additionalFormatters);
+    }
+
+    if (!isWorker && rights.includes(RIGHT_BILL_PAYMENT_DELETE)) {
       formatters.push((billPayment) => (
         <Tooltip title={formatMessage(intl, "invoice", "deleteButtonTooltip")}>
-          <IconButton
-            onClick={() => onDelete(billPayment)}
-            disabled={deletedBillPaymentUuids.includes(billPayment.id)}
-          >
+          <IconButton onClick={() => onDelete(billPayment)} disabled={deletedBillPaymentUuids.includes(billPayment.id)}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
       ));
     }
+
     return formatters;
   };
 
-  const sorts = () => [
-    ["codeExt", true],
-    ["label", true],
-    ["codeTp", true],
-    ["codeReceipt", true],
-    ["fees", true],
-    ["amountReceived", true],
-    ["datePayment", true],
-    ["paymentOrigin", true],
-  ];
+  const sortsSetter = () => {
+    const sortsArray = [
+      ["codeExt", true],
+      ["label", true],
+      ["amountReceived", true],
+      ["datePayment", true],
+    ];
+
+    if (!isWorker) {
+      const additionalSorts = [
+        ["codeTp", true],
+        ["codeReceipt", true],
+        ["fees", true],
+        ["paymentOrigin", true],
+      ];
+
+      sortsArray.push(...additionalSorts);
+    }
+
+    return sortsArray;
+  };
 
   const defaultFilters = () => ({
     subjectIds: {
@@ -192,9 +214,9 @@ const BillPaymentsSearcher = ({
           billPaymentsTotalCount,
         })}
         filtersToQueryParams={filtersToQueryParams}
-        headers={headers}
+        headers={headersSetter}
         itemFormatters={itemFormatters}
-        sorts={sorts}
+        sorts={sortsSetter}
         rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
         defaultPageSize={DEFAULT_PAGE_SIZE}
         defaultOrderBy="codeExt"
@@ -223,7 +245,7 @@ const mapDispatchToProps = (dispatch) => {
     {
       fetchBillPayments,
       deleteBillPayment,
-      coreConfirm
+      coreConfirm,
     },
     dispatch,
   );
