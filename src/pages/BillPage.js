@@ -93,7 +93,7 @@ const BillPage = ({
   };
 
   const actions = [
-    !!bill && 
+    !!bill && !isWorker && 
       getEnumValue(bill?.status) !== STATUS.PAID && {
         doIt: openDeleteBillConfirmDialog,
         icon: <DeleteIcon />,
@@ -116,6 +116,7 @@ const BillPage = ({
           onChange={onChange}
           HeadPanel={isWorker && VoucherHeadPanel ? VoucherHeadPanel : BillHeadPanel}
           Panels={[BillTabPanel]}
+          isWorker={isWorker}
           rights={rights}
           actions={actions}
           setConfirmedAction={setConfirmedAction}

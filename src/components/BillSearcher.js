@@ -68,13 +68,10 @@ const BillSearcher = ({
   const { economicUnit } = useSelector((state) => state.policyHolder);
   const economicUnitConfig = modulesManager.getConf("fe-core", "App.economicUnitConfig", DEFAULT.ECONOMIC_UNIT_CONFIG);
   const isAdminOrInspector = rights.includes(INSPECTOR_RIGHT) || rights.includes(ADMIN_RIGHT);
+  const isWorker = modulesManager.getConf("fe-core", "isWorker", DEFAULT.IS_WORKER);
 
-  const additionalExportFields = 
-    economicUnitConfig && 
-    economicUnit?.id && 
-    !isAdminOrInspector 
-      ? { subjectId: decodeId(economicUnit?.id) } 
-      : {};
+  const additionalExportFields =
+    economicUnitConfig && economicUnit?.id && !isAdminOrInspector ? { subjectId: decodeId(economicUnit?.id) } : {};
 
   useEffect(() => billToDelete && openConfirmDialog(), [billToDelete]);
 
@@ -150,14 +147,14 @@ const BillSearcher = ({
   );
 
   const headers = () => {
-    const headers = [
-      "bill.subject",
-      "bill.thirdparty",
-      "bill.code",
-      "bill.dateBill",
-      "bill.amountTotal",
-      "bill.status.label",
-    ];
+    const headers = ["bill.code", "bill.dateBill", "bill.amountTotal", "bill.status.label"];
+
+    if (!isWorker) {
+      const additionalHeaders = ["bill.subject", "bill.thirdparty"];
+
+      headers.unshift(...additionalHeaders);
+    }
+
     if (rights.includes(RIGHT_BILL_SEARCH)) {
       headers.push("emptyLabel");
     }
@@ -166,51 +163,70 @@ const BillSearcher = ({
 
   const itemFormatters = () => {
     const formatters = [
-      (bill) => getSubjectAndThirdpartyTypePicker(modulesManager, bill.subjectTypeName, bill.subject),
-      (bill) => getSubjectAndThirdpartyTypePicker(modulesManager, bill.thirdpartyTypeName, bill.thirdparty),
       (bill) => bill.code,
       (bill) => (!!bill.dateBill ? formatDateFromISO(modulesManager, intl, bill.dateBill) : EMPTY_STRING),
       (bill) => bill.amountTotal,
       (bill) => <InvoiceStatusPicker value={bill?.status} readOnly />,
+      (bill) => (
+        <div style={{ textAlign: "right" }}>
+          {rights.includes(RIGHT_BILL_SEARCH) && (
+            <Tooltip title={formatMessage(intl, "invoice", "editButtonTooltip")}>
+              <IconButton
+                href={billUpdatePageUrl(bill)}
+                onClick={(e) => e.stopPropagation() && onDoubleClick(bill)}
+                disabled={deletedBillUuids.includes(bill.id)}
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+          {rights.includes(RIGHT_BILL_DELETE) && (
+            <Tooltip title={formatMessage(intl, "invoice", "deleteButtonTooltip")}>
+              <IconButton
+                onClick={() => onDelete(bill)}
+                disabled={bill?.status === STATUS.PAID || deletedBillUuids.includes(bill.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+        </div>
+      ),
     ];
-    if (rights.includes(RIGHT_BILL_SEARCH)) {
-      formatters.push((bill) => (
-        <Tooltip title={formatMessage(intl, "invoice", "editButtonTooltip")}>
-          <IconButton
-            href={billUpdatePageUrl(bill)}
-            onClick={(e) => e.stopPropagation() && onDoubleClick(bill)}
-            disabled={deletedBillUuids.includes(bill.id)}
-          >
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-      ));
+
+    if (!isWorker) {
+      const additionalFormatters = [
+        (bill) => getSubjectAndThirdpartyTypePicker(modulesManager, bill.subjectTypeName, bill.subject),
+        (bill) => getSubjectAndThirdpartyTypePicker(modulesManager, bill.thirdpartyTypeName, bill.thirdparty),
+      ];
+
+      formatters.unshift(...additionalFormatters);
     }
-    if (rights.includes(RIGHT_BILL_DELETE)) {
-      formatters.push((bill) => (
-        <Tooltip title={formatMessage(intl, "invoice", "deleteButtonTooltip")}>
-          <IconButton
-            onClick={() => onDelete(bill)}
-            disabled={bill?.status === STATUS.PAID || deletedBillUuids.includes(bill.id)}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ));
-    }
+
     return formatters;
   };
 
   const rowIdentifier = (bill) => bill.id;
 
-  const sorts = () => [
-    ["subjectType", true],
-    ["thirdpartyType", true],
-    ["code", true],
-    ["dateBill", true],
-    ["amountTotal", true],
-    ["status", true],
-  ];
+  const sorts = () => {
+    const sortsArray = [
+      ["code", true],
+      ["dateBill", true],
+      ["amountTotal", true],
+      ["status", true],
+    ];
+
+    if (!isWorker) {
+      sortsArray.unshift(
+        ...[
+          ["subjectType", true],
+          ["thirdpartyType", true],
+        ],
+      );
+    }
+
+    return sortsArray;
+  };
 
   const billUpdatePageUrl = (bill) => modulesManager.getRef("bill.route.bill") + "/" + bill?.id;
 
@@ -286,7 +302,7 @@ const BillSearcher = ({
         rowLocked={isRowDisabled}
         actions={actions}
         actionsContributionKey={actionsContributionKey}
-        withSelection={economicUnitConfig && economicUnit?.id && !isAdminOrInspector  ? null : "multiple"}
+        withSelection={economicUnitConfig && economicUnit?.id && !isAdminOrInspector ? null : "multiple"}
         selectionMessage={"bill.selection.count"}
         exportable={true}
         exportFetch={fetchBillsExport}
