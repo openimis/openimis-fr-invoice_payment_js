@@ -5,6 +5,7 @@ import { injectIntl } from "react-intl";
 
 import { IconButton, Tooltip, Button, Dialog, DialogActions, DialogTitle, DialogContent } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import {
@@ -176,7 +177,7 @@ const BillSearcher = ({
                 onClick={(e) => e.stopPropagation() && onDoubleClick(bill)}
                 disabled={deletedBillUuids.includes(bill.id)}
               >
-                <EditIcon />
+                {isWorker ? <VisibilityIcon /> : <EditIcon />}
               </IconButton>
             </Tooltip>
           )}
@@ -331,6 +332,7 @@ const BillSearcher = ({
           "status": "Status",
         }}
         additionalExportFields={additionalExportFields}
+        downloadWithIconButton={isWorker}
       />
       {failedExport && (
         <Dialog open={failedExport} fullWidth maxWidth="sm">
