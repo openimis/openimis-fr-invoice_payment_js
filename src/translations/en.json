@@ -7,6 +7,7 @@
   "emptyLabel": " ",
   "any": "Any",
   "editButtonTooltip": "Edit",
+  "viewDetailsButtonTooltip": "View details",
   "deleteButtonTooltip": "Delete",
   "dialog": {
     "create": "Create",

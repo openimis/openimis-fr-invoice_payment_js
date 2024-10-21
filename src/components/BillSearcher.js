@@ -171,7 +171,7 @@ const BillSearcher = ({
       (bill) => (
         <div style={{ textAlign: "right" }}>
           {rights.includes(RIGHT_BILL_SEARCH) && (
-            <Tooltip title={formatMessage(intl, "invoice", "editButtonTooltip")}>
+            <Tooltip title={formatMessage(intl, "invoice", isWorker ? "viewDetailsButtonTooltip" : "editButtonTooltip")}>
               <IconButton
                 href={billUpdatePageUrl(bill)}
                 onClick={(e) => e.stopPropagation() && onDoubleClick(bill)}
