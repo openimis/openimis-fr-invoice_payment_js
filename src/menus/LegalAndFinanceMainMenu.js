@@ -37,7 +37,14 @@ const LegalAndFinanceMainMenu = (props) => {
 
     if (!entries.length) return null;
 
-    return <MainMenuContribution {...props} header={formatMessage(intl, "invoice", "mainMenu")} entries={entries} />;
+    return (
+      <MainMenuContribution 
+        {...props} 
+        header={formatMessage(intl, "invoice", "mainMenu")}
+        entries={entries}
+        menuId='LegalAndFinanceMainMenu'
+      />
+    );
   }
 
   if (rights.filter((r) => r >= RIGHT_INVOICE_SEARCH && r <= RIGHT_INVOICE_AMEND).length) {
@@ -67,7 +74,14 @@ const LegalAndFinanceMainMenu = (props) => {
 
   if (!entries.length) return null;
 
-  return <MainMenuContribution {...props} header={formatMessage(intl, "invoice", "mainMenu")} entries={entries} menuId='legalAndFinanceMainMenu' />;
+  return (
+    <MainMenuContribution 
+      {...props} 
+      header={formatMessage(intl, "invoice", "mainMenu")}
+      entries={entries}
+      menuId="LegalAndFinanceMainMenu"
+    />
+  );
 };
 
 const mapStateToProps = (state) => ({
