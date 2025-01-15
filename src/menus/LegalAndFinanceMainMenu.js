@@ -31,6 +31,7 @@ const LegalAndFinanceMainMenu = (props) => {
         text: formatMessage(intl, "invoice", "menu.bills"),
         icon: <DoubleArrowFlipped />,
         route: "/bills",
+        id: "legalAndFinance.bills",
       });
     }
 
@@ -45,6 +46,7 @@ const LegalAndFinanceMainMenu = (props) => {
       text: formatMessage(intl, "invoice", "menu.invoices"),
       icon: <DoubleArrow />,
       route: "/invoices",
+      id: "legalAndFinance.invoices",
     });
   }
   if (rights.filter((r) => r >= RIGHT_BILL_SEARCH && r <= RIGHT_BILL_AMEND).length) {
@@ -53,6 +55,7 @@ const LegalAndFinanceMainMenu = (props) => {
       text: formatMessage(intl, "invoice", "menu.bills"),
       icon: <DoubleArrowFlipped />,
       route: "/bills",
+      id: "legalAndFinance.bills",
     });
   }
 
