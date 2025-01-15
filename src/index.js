@@ -29,7 +29,6 @@ const DEFAULT_CONFIG = {
   "core.MainMenu": [{
     name: 'LegalAndFinanceMainMenu',
     component: LegalAndFinanceMainMenu,
-    menuId: 'legalAndFinanceMainMenu'
   }],
   "core.Router": [
     { path: ROUTE_INVOICES, component: InvoicesPage },

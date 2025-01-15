@@ -67,7 +67,7 @@ const LegalAndFinanceMainMenu = (props) => {
 
   if (!entries.length) return null;
 
-  return <MainMenuContribution {...props} header={formatMessage(intl, "invoice", "mainMenu")} entries={entries} />;
+  return <MainMenuContribution {...props} header={formatMessage(intl, "invoice", "mainMenu")} entries={entries} menuId='legalAndFinanceMainMenu' />;
 };
 
 const mapStateToProps = (state) => ({
