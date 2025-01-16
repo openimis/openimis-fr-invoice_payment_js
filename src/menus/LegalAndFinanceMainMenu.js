@@ -13,7 +13,7 @@ import {
 } from "../constants";
 import { withStyles } from "@material-ui/core/styles";
 
-const DoubleArrowFlipped = withStyles({
+export const DoubleArrowFlipped = withStyles({
   root: {
     transform: "scaleX(-1)",
   },
