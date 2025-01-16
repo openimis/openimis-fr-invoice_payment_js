@@ -13,7 +13,7 @@ import {
 } from "../constants";
 import { withStyles } from "@material-ui/core/styles";
 
-const DoubleArrowFlipped = withStyles({
+export const DoubleArrowFlipped = withStyles({
   root: {
     transform: "scaleX(-1)",
   },
@@ -31,12 +31,20 @@ const LegalAndFinanceMainMenu = (props) => {
         text: formatMessage(intl, "invoice", "menu.bills"),
         icon: <DoubleArrowFlipped />,
         route: "/bills",
+        id: "legalAndFinance.bills",
       });
     }
 
     if (!entries.length) return null;
 
-    return <MainMenuContribution {...props} header={formatMessage(intl, "invoice", "mainMenu")} entries={entries} />;
+    return (
+      <MainMenuContribution 
+        {...props} 
+        header={formatMessage(intl, "invoice", "mainMenu")}
+        entries={entries}
+        menuId='LegalAndFinanceMainMenu'
+      />
+    );
   }
 
   if (rights.filter((r) => r >= RIGHT_INVOICE_SEARCH && r <= RIGHT_INVOICE_AMEND).length) {
@@ -45,6 +53,7 @@ const LegalAndFinanceMainMenu = (props) => {
       text: formatMessage(intl, "invoice", "menu.invoices"),
       icon: <DoubleArrow />,
       route: "/invoices",
+      id: "legalAndFinance.invoices",
     });
   }
   if (rights.filter((r) => r >= RIGHT_BILL_SEARCH && r <= RIGHT_BILL_AMEND).length) {
@@ -53,6 +62,7 @@ const LegalAndFinanceMainMenu = (props) => {
       text: formatMessage(intl, "invoice", "menu.bills"),
       icon: <DoubleArrowFlipped />,
       route: "/bills",
+      id: "legalAndFinance.bills",
     });
   }
 
@@ -64,7 +74,14 @@ const LegalAndFinanceMainMenu = (props) => {
 
   if (!entries.length) return null;
 
-  return <MainMenuContribution {...props} header={formatMessage(intl, "invoice", "mainMenu")} entries={entries} />;
+  return (
+    <MainMenuContribution 
+      {...props} 
+      header={formatMessage(intl, "invoice", "mainMenu")}
+      entries={entries}
+      menuId="LegalAndFinanceMainMenu"
+    />
+  );
 };
 
 const mapStateToProps = (state) => ({
